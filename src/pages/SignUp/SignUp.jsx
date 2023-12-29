@@ -8,7 +8,7 @@ import { Formik, Field, Form, useFormik } from "formik";
 import { schema } from "../../utils/rules";
 
 export default function SignUp() {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const signUpSchema = schema;
   const signUpSchema2 = schema.pick(["full_name", "password", "account_name"]);
 
