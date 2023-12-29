@@ -36,6 +36,7 @@ export default function SignUp() {
                       console.log("Login Failed");
                     }}
                     auto_select
+                    text="continue_with"
                   />
                 </div>
                 <div
