@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -9,8 +9,36 @@ import { schema } from "../../utils/rules";
 
 export default function SignUp() {
   const [step, setStep] = useState(1);
-  const signUpSchema = schema;
+  const signUpSchema = schema.pick(["email"]);
   const signUpSchema2 = schema.pick(["full_name", "password", "account_name"]);
+
+  useEffect(() => {
+    const storedStep = localStorage.getItem("step");
+    if (storedStep) {
+      setStep(parseInt(storedStep));
+    }
+  }, []);
+
+  const handleStepChange = (newStep) => {
+    setStep(newStep);
+    localStorage.setItem("step", newStep); // Store step in localStorage
+  };
+
+  useEffect(() => {
+    const onBackButtonEvent = (e) => {
+      if (e) {
+        e.preventDefault();
+        setStep(1);
+        localStorage.setItem("step", 1); // Reset step to 1
+      }
+    };
+
+    window.onpopstate = onBackButtonEvent;
+
+    return () => {
+      window.onpopstate = null;
+    };
+  }, []);
 
   return (
     <>
@@ -59,8 +87,8 @@ export default function SignUp() {
                     <Formik
                       initialValues={{}}
                       onSubmit={(values, actions) => {
-                        alert(JSON.stringify(values, null, 2));
                         actions.setSubmitting(false);
+                        handleStepChange(step + 1);
                       }}
                       validationSchema={signUpSchema}
                     >
@@ -79,7 +107,6 @@ export default function SignUp() {
                           <button
                             type="submit"
                             className=" text-white py-2 mt-3 w-full bg-[#0073ea]"
-                            onClick={() => setStep(2)}
                           >
                             Continue
                           </button>
@@ -157,7 +184,6 @@ export default function SignUp() {
                         password: "",
                       }}
                       onSubmit={(values, actions) => {
-                        console.log("ec");
                         actions.setSubmitting(false);
                         alert(JSON.stringify(values, null, 2));
                       }}
