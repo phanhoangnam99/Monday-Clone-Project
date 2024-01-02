@@ -1,0 +1,38 @@
+[
+  {
+    "purpose": "Work",
+    "roles": [
+      "Business owner",
+      "Team leader",
+      "Team member",
+      "Freelancer",
+      "Director",
+      "C-Level",
+      "VP"
+    ]
+  },
+  {
+    "purpose": "Personal",
+    "roles": []
+  },
+  {
+    "purpose": "School",
+    "roles": [
+      "Undergraduate student",
+      "Graduate student",
+      "Faculty member",
+      "Other"
+    ]
+  },
+  {
+    "purpose": "Nonprofits",
+    "roles": [
+      "Board member",
+      "Executive",
+      "Employee",
+      "Volunteer",
+      "IT staff",
+      "Other"
+    ]
+  }
+]

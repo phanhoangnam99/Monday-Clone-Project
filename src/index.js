@@ -5,7 +5,7 @@ import "./index.scss";
 
 // redux store
 import { Provider } from "react-redux";
-import { store } from "./reudux/configStore";
+import { store } from "./redux/configStore";
 import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import App from "./App";
