@@ -6,11 +6,14 @@ import Input from "../../components/Input";
 
 import { Formik, Field, Form, useFormik } from "formik";
 import { schema } from "../../utils/rules";
+import purposeData from "./data.json";
+import RadioButton from "../../components/RadioButton/RadioButton";
 
 export default function SignUp() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   const signUpSchema = schema.pick(["email"]);
   const signUpSchema2 = schema.pick(["full_name", "password", "account_name"]);
+  const [selectedValue, setSelectedValue] = useState("");
 
   useEffect(() => {
     const storedStep = localStorage.getItem("step");
@@ -39,6 +42,14 @@ export default function SignUp() {
       window.onpopstate = null;
     };
   }, []);
+
+  const handleChangeRadioBtn = (e) => {
+    setSelectedValue(e.target.value);
+  };
+
+  const findData = (value) => {
+    return purposeData.find((purpose) => purpose.purpose === value);
+  };
 
   return (
     <>
@@ -165,7 +176,7 @@ export default function SignUp() {
             <div className="lg:col-span-7 col-span-12   grid">
               <div className="md:px-32 md:py-16 flex flex-col md:justify-start justify-center items-center ">
                 <div className="flex flex-col  w-[80%] md:w-full">
-                  <div>
+                  <div className="w-full flex flex-start">
                     <img
                       alt="logo_monday"
                       className=" h-6 w-32"
@@ -185,7 +196,7 @@ export default function SignUp() {
                       }}
                       onSubmit={(values, actions) => {
                         actions.setSubmitting(false);
-                        alert(JSON.stringify(values, null, 2));
+                        handleStepChange(step + 1);
                       }}
                       validationSchema={signUpSchema2}
                       validateOnBlur
@@ -261,6 +272,131 @@ export default function SignUp() {
               <div className="flex justify-center items-center">
                 <img
                   src="https://dapulse-res.cloudinary.com/image/upload/monday_platform/signup/signup-right-side-assets-new-flow/set-up-your-account.png"
+                  alt=""
+                  className="h-[100vh]"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {step === 3 && (
+        <div>
+          <div className="grid sm:grid-cols-12 auto-cols-auto h-[100vh]">
+            <div className="lg:col-span-7 col-span-12   grid">
+              <div className="md:px-32 md:py-16 flex flex-col md:justify-start justify-start items-center ">
+                <div className="w-full flex flex-start">
+                  <img
+                    alt="logo_monday"
+                    className=" h-6 w-32"
+                    src="https://cdn.monday.com/images/logos/logo-full-big.png"
+                  ></img>
+                </div>
+                <div className="flex flex-col  w-[80%] md:w-full h-full justify-center">
+                  <div className=" text-3xl  py-4 mt-6">
+                    <p>Hey there, what brings you here today?</p>
+
+                    {/* ======================================== */}
+                  </div>
+                  <div className="flex flex-wrap ">
+                    {purposeData.map((purpose) => (
+                      <RadioButton
+                        radioName={purpose.purpose}
+                        value={purpose.purpose}
+                        onChange={(e) => handleChangeRadioBtn(e)}
+                        selected={selectedValue}
+                      />
+                    ))}
+                  </div>
+
+                  {/* ======================================== */}
+
+                  {
+                    <div
+                      className={`${
+                        selectedValue &&
+                        findData(selectedValue).roles.length > 0
+                          ? "visible"
+                          : "invisible"
+                      }
+                            `}
+                    >
+                      <div className=" text-3xl  py-4 mt-6">
+                        <p>What best describes your current role?</p>
+                      </div>
+                      <div className="flex flex-wrap ">
+                        {selectedValue &&
+                          findData(selectedValue).roles.map((purpose) => {
+                            return (
+                              <RadioButton
+                                name="border-radio-2"
+                                radioName={purpose}
+                              />
+                            );
+                          })}
+                      </div>
+                    </div>
+                  }
+
+                  {/* ======================================== */}
+
+                  <div className="flex flex-col justify-center items-center mt-3 text-sm sm:text-base">
+                    <div></div>
+                  </div>
+                </div>
+                <div className="w-full mt-5 flex flex-auto justify-end">
+                  <div className=" mt-auto">
+                    <button
+                      type="submit"
+                      className=" text-white rounded-[5px] px-3 py-2 w-32  bg-[#0073ea]"
+                    >
+                      <div className="flex justify-evenly">
+                        <span>Continue</span>
+                        <span>{">"}</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* <div className="action-bar flex flex-1 mt-10 large-signup-modal">
+                  <div className="left-bar large-signup-modal" />
+                  <div className="right-bar large-signup-modal mt-auto">
+                    <div className="account-setup-desktop-questions-submit-button-component is-large-modal">
+                      <button
+                        type="button"
+                        className="submit-button button_2cc9b456c1 sizeMedium_18a78b4558 kindPrimary_873cf6047e colorPrimary_5d4dbadec9 disabled_60ab23b7e7"
+                        data-testid="button"
+                        aria-disabled="true"
+                        aria-busy="false"
+                        tabIndex={-1}
+                      >
+                        Continue
+                        <svg
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          width={20}
+                          height={20}
+                          aria-hidden="true"
+                          className="icon_c85ee8f381 rightIcon_b8664810bd noFocusStyle_7a93ee2575"
+                          data-testid="icon"
+                        >
+                          <path
+                            d="M12.5303 9.46967L12 10L12.5303 10.5303C12.8232 10.2374 12.8232 9.76256 12.5303 9.46967ZM10.9393 10L7.46967 13.4697C7.17678 13.7626 7.17678 14.2374 7.46967 14.5303C7.76256 14.8232 8.23744 14.8232 8.53033 14.5303L12.5303 10.5303L12 10L12.5303 9.46967L8.53033 5.46967C8.23744 5.17678 7.76256 5.17678 7.46967 5.46967C7.17678 5.76256 7.17678 6.23744 7.46967 6.53033L10.9393 10Z"
+                            fill="currentColor"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div> */}
+            </div>
+            <div className="lg:col-span-5  lg:grid hidden bg-[#6161ff] h-[100vh]">
+              <div className="flex justify-center items-center">
+                <img
+                  src="https://dapulse-res.cloudinary.com/image/upload/monday_platform/signup/signup-right-side-assets-new-flow/what-brings-you-here-today.png"
                   alt=""
                   className="h-[100vh]"
                 />
