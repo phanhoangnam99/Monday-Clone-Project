@@ -10,7 +10,7 @@ import purposeData from "./data.json";
 import RadioButton from "../../components/RadioButton/RadioButton";
 
 export default function SignUp() {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   const signUpSchema = schema.pick(["email"]);
   const signUpSchema2 = schema.pick(["full_name", "password", "account_name"]);
   const [selectedValue, setSelectedValue] = useState("");
@@ -358,40 +358,6 @@ export default function SignUp() {
                   </div>
                 </div>
               </div>
-
-              {/* <div className="action-bar flex flex-1 mt-10 large-signup-modal">
-                  <div className="left-bar large-signup-modal" />
-                  <div className="right-bar large-signup-modal mt-auto">
-                    <div className="account-setup-desktop-questions-submit-button-component is-large-modal">
-                      <button
-                        type="button"
-                        className="submit-button button_2cc9b456c1 sizeMedium_18a78b4558 kindPrimary_873cf6047e colorPrimary_5d4dbadec9 disabled_60ab23b7e7"
-                        data-testid="button"
-                        aria-disabled="true"
-                        aria-busy="false"
-                        tabIndex={-1}
-                      >
-                        Continue
-                        <svg
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          width={20}
-                          height={20}
-                          aria-hidden="true"
-                          className="icon_c85ee8f381 rightIcon_b8664810bd noFocusStyle_7a93ee2575"
-                          data-testid="icon"
-                        >
-                          <path
-                            d="M12.5303 9.46967L12 10L12.5303 10.5303C12.8232 10.2374 12.8232 9.76256 12.5303 9.46967ZM10.9393 10L7.46967 13.4697C7.17678 13.7626 7.17678 14.2374 7.46967 14.5303C7.76256 14.8232 8.23744 14.8232 8.53033 14.5303L12.5303 10.5303L12 10L12.5303 9.46967L8.53033 5.46967C8.23744 5.17678 7.76256 5.17678 7.46967 5.46967C7.17678 5.76256 7.17678 6.23744 7.46967 6.53033L10.9393 10Z"
-                            fill="currentColor"
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div> */}
             </div>
             <div className="lg:col-span-5  lg:grid hidden bg-[#6161ff] h-[100vh]">
               <div className="flex justify-center items-center">
