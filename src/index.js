@@ -9,10 +9,9 @@ import { store } from "./redux/configStore";
 import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import App from "./App";
-import { ThemeProvider } from '@material-tailwind/react'
+import { ThemeProvider } from "@material-tailwind/react";
 
-
-const theme={
+const theme = {
   list: {
     defaultProps: {
       ripple: true,
@@ -42,7 +41,8 @@ const theme={
             lightHeight: "leading-tight",
             transition: "transition-all",
             bg: "hover:bg-blue-gray-50 hover:bg-opacity-80 focus:bg-blue-gray-50 focus:bg-opacity-80 active:bg-blue-gray-50 active:bg-opacity-80",
-            color: "hover:text-blue-gray-900 focus:text-blue-gray-900 active:text-blue-gray-900",
+            color:
+              "hover:text-blue-gray-900 focus:text-blue-gray-900 active:text-blue-gray-900",
             outline: "outline-none",
           },
           selected: {
@@ -55,7 +55,8 @@ const theme={
             pointerEvents: "pointer-events-none",
             userSelect: "select-none",
             bg: "hover:bg-transparent focus:bg-transparent active:bg-transparent",
-            color: "hover:text-blue-gray-500 focus:text-blue-gray-500 active:text-blue-gray-500",
+            color:
+              "hover:text-blue-gray-500 focus:text-blue-gray-500 active:text-blue-gray-500",
           },
         },
         itemPrefix: {
@@ -70,17 +71,17 @@ const theme={
         },
       },
     },
-  }
-}
+  },
+};
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <Provider store={store}>
       <ThemeProvider value={theme}>
-      <GoogleOAuthProvider clientId="1038225626439-c0ko3dftb5ajfqcdfer9cmnlo9lauc4m.apps.googleusercontent.com">
-        <App />
-      </GoogleOAuthProvider>
+        <GoogleOAuthProvider clientId="1038225626439-c0ko3dftb5ajfqcdfer9cmnlo9lauc4m.apps.googleusercontent.com">
+          <App />
+        </GoogleOAuthProvider>
       </ThemeProvider>
     </Provider>
   </BrowserRouter>
