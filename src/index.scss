@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+span #secondary-text {
+  display: none;
+}
+
+span.absolute.top-2\/4.-translate-y-2\/4.left-0.pt-3 {
+  padding-top: 0;
+  padding-left: 8px;
+  width: 100%;
+}

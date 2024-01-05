@@ -8,12 +8,16 @@ import { Formik, Field, Form, useFormik } from "formik";
 import { schema } from "../../utils/rules";
 import purposeData from "./data.json";
 import RadioButton from "../../components/RadioButton/RadioButton";
+import CheckboxCompo from "../../components/Checkbox";
+import { motion } from "framer-motion";
+import { Option, Select, Typography, input } from "@material-tailwind/react";
 
 export default function SignUp() {
   const [step, setStep] = useState(1);
   const signUpSchema = schema.pick(["email"]);
   const signUpSchema2 = schema.pick(["full_name", "password", "account_name"]);
   const [selectedValue, setSelectedValue] = useState("");
+  const [inputFields, setInputFields] = useState([{ email: "", role: " " }]);
 
   useEffect(() => {
     const storedStep = localStorage.getItem("step");
@@ -49,6 +53,36 @@ export default function SignUp() {
 
   const findData = (value) => {
     return purposeData.find((purpose) => purpose.purpose === value);
+  };
+
+  const handleChange = (index, event, value) => {
+    // Check if the event is from the input or the select field
+    if (event) {
+      // Get the name and value of the input field
+      const { name, value } = event.target;
+
+      // Update the state variable by using the index and the name parameters
+      setInputFields((prev) =>
+        prev.map((item, i) => (i === index ? { ...item, [name]: value } : item))
+      );
+    } else if (value) {
+      // Update the state variable by using the index and the value parameters
+      setInputFields((prev) =>
+        prev.map((item, i) => (i === index ? { ...item, role: value } : item))
+      );
+    }
+  };
+
+  const element = document.getElementsByClassName("overflow-y-auto");
+  const scrollToBottom = () => {
+    element.scrollTop = element.scrollHeight - element.clientHeight;
+  };
+
+  const addFields = () => {
+    let newfield = { email: "", role: "" };
+
+    setInputFields([...inputFields, newfield]);
+    scrollToBottom();
   };
 
   return (
@@ -169,7 +203,6 @@ export default function SignUp() {
           </div>
         </div>
       )}
-
       {step === 2 && (
         <div>
           <div className="grid sm:grid-cols-12 auto-cols-auto h-[100vh]">
@@ -298,9 +331,10 @@ export default function SignUp() {
 
                     {/* ======================================== */}
                   </div>
-                  <div className="flex flex-wrap ">
+                  <div className="flex flex-wrap  ">
                     {purposeData.map((purpose) => (
                       <RadioButton
+                        key={purpose.purpose}
                         radioName={purpose.purpose}
                         value={purpose.purpose}
                         onChange={(e) => handleChangeRadioBtn(e)}
@@ -347,8 +381,8 @@ export default function SignUp() {
                 <div className="w-full mt-5 flex flex-auto justify-end">
                   <div className=" mt-auto">
                     <button
-                      type="submit"
                       className=" text-white rounded-[5px] px-3 py-2 w-32  bg-[#0073ea]"
+                      onClick={() => handleStepChange(step + 1)}
                     >
                       <div className="flex justify-evenly">
                         <span>Continue</span>
@@ -363,6 +397,201 @@ export default function SignUp() {
               <div className="flex justify-center items-center">
                 <img
                   src="https://dapulse-res.cloudinary.com/image/upload/monday_platform/signup/signup-right-side-assets-new-flow/what-brings-you-here-today.png"
+                  alt=""
+                  className="h-[100vh]"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {step === 4 && (
+        <div>
+          <div className="grid sm:grid-cols-12 auto-cols-auto h-[100vh]">
+            <div className="lg:col-span-7 col-span-12   grid">
+              <div className="md:px-32 md:py-16 flex flex-col md:justify-start justify-start items-center ">
+                <div className="w-full flex flex-start">
+                  <img
+                    alt="logo_monday"
+                    className=" h-6 w-32"
+                    src="https://cdn.monday.com/images/logos/logo-full-big.png"
+                  ></img>
+                </div>
+                <div className="flex flex-col  w-[80%] md:w-full h-full justify-center">
+                  <div className=" text-3xl  py-4 mt-6">
+                    <p>One last question, how did you hear about us?</p>
+
+                    {/* ======================================== */}
+                  </div>
+
+                  <div className="flex flex-wrap ">
+                    <CheckboxCompo name="Software review sites" />
+                    <CheckboxCompo name="Friend / Colleague" />
+                    <CheckboxCompo name="Blllboard / Public transit ad" />
+                    <CheckboxCompo name="YouTube ad" />
+
+                    <CheckboxCompo name="LinkedIn" />
+                    <CheckboxCompo name="Consultant" />
+                    <CheckboxCompo name="Social media (Facebook, InStagram, Reddit, etc.)" />
+                    <CheckboxCompo name="Search engine (Google, Bing, etc.)" />
+                    <CheckboxCompo name="TV / Streaming service" />
+                    <CheckboxCompo name=" Audio ad (Podcast, Spotify)" />
+                    <CheckboxCompo name=" Other" />
+
+                    {/* <CheckboxCompo
+                      name="Other"
+                      ref={ref}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 17,
+                      }}
+                    /> */}
+                  </div>
+
+                  <div className="flex flex-col justify-center items-center mt-3 text-sm sm:text-base">
+                    <div></div>
+                  </div>
+                </div>
+                <div className="w-full mt-5 flex flex-auto ">
+                  <div className=" mt-auto flex justify-between  w-full">
+                    <button
+                      className=" text-black rounded-[5px] px-3 py-2 w-24 border border-black"
+                      onClick={() => handleStepChange(step - 1)}
+                    >
+                      <div className="flex justify-evenly">
+                        <span>{"<"}</span>
+                        <span>Back</span>
+                      </div>
+                    </button>
+                    <button
+                      className=" text-white rounded-[5px] px-3 py-2 w-32  bg-[#0073ea]"
+                      onClick={() => handleStepChange(step + 1)}
+                    >
+                      <div className="flex justify-evenly">
+                        <span>Continue</span>
+                        <span>{">"}</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-5  lg:grid hidden bg-[#ffcc00] h-[100vh]">
+              <div className="flex justify-center items-center">
+                <img
+                  src="https://dapulse-res.cloudinary.com/image/upload/monday_platform/signup/signup-right-side-assets-new-flow/how-did-you-hear-about-us-with-invite.png"
+                  alt=""
+                  className="h-[100vh]"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {step === 5 && (
+        <div>
+          <div className="grid sm:grid-cols-12 auto-cols-auto h-[100vh]">
+            <div className="lg:col-span-7 col-span-12   grid">
+              <div className="md:px-32 md:py-16 flex flex-col md:justify-start justify-start items-center ">
+                <div className="w-full flex flex-start">
+                  <img
+                    alt="logo_monday"
+                    className=" h-6 w-32"
+                    src="https://cdn.monday.com/images/logos/logo-full-big.png"
+                  ></img>
+                </div>
+                <div className="flex flex-col  w-[80%] md:w-full h-full justify-center">
+                  <div className=" text-3xl  py-4 mt-6">
+                    <p>Who else is on your team?</p>
+
+                    {/* ======================================== */}
+                  </div>
+
+                  <div className="flex flex-wrap max-h-80 overflow-y-auto  ">
+                    <form className="w-full">
+                      {inputFields.map((input, index) => (
+                        <div className="flex my-3 " key={index}>
+                          <Input
+                            name="email"
+                            key={index}
+                            value={input.email}
+                            placeholder="Add email here"
+                            onChange={(event) => handleChange(index, event)}
+                            className="w-[90%] "
+                            classNameInput="rounded-none px-3 py-2 w-full outline-none border border-gray-300 focus:border-gray-500 focus:shadow-sm"
+                          />
+                          <Select
+                            variant="static"
+                            label={null}
+                            name="role"
+                            onChange={(value) =>
+                              handleChange(index, null, value)
+                            }
+                            containerProps={{
+                              className: " h-auto !w-[20%] min-w-[1px]",
+                            }}
+                            className=" rounded-none min-h-full h-full border border-solid border-[#e0e0e0] focus:border-black focus:border"
+                          >
+                            <Option value="Admin">
+                              Admin
+                              <p
+                                id="secondary-text"
+                                className=" text-gray-400 text-sm"
+                              >
+                                Can invite & manage new users
+                              </p>
+                            </Option>
+                            <Option value="Member">
+                              Member
+                              <p
+                                id="secondary-text"
+                                className="text-gray-400 text-sm"
+                              >
+                                Can add and edit content
+                              </p>
+                            </Option>
+                          </Select>
+                        </div>
+                      ))}
+                    </form>
+                    <div>
+                      <button
+                        onClick={addFields}
+                        className="hover:bg-[#dcdfec] px-3 py-2 rounded-md"
+                      >
+                        + Add Another
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col justify-center items-center mt-3 text-sm sm:text-base">
+                    <div></div>
+                  </div>
+                </div>
+                <div className="w-full mt-5 flex flex-auto ">
+                  <div className=" mt-auto flex justify-between  w-full">
+                    <button
+                      className=" text-black   hover:bg-[#dcdfec] px-3 py-2 rounded-md"
+                    >
+                      <div className="flex justify-evenly">
+                        <span>Remind me later</span>
+                      </div>
+                    </button>
+                    <button className=" text-white rounded-[5px] px-1 py-2 w-36  bg-[#0073ea]">
+                      <div className="flex justify-evenly">
+                        <span>Invite your team</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-5  lg:grid hidden bg-[#00ca72] h-[100vh]">
+              <div className="flex justify-center items-center">
+                <img
+                  src="https://dapulse-res.cloudinary.com/image/upload/monday_platform/signup/new-signup-right-side-assets/Invite-your-teammates.png"
                   alt=""
                   className="h-[100vh]"
                 />
