@@ -11,3 +11,39 @@ span.absolute.top-2\/4.-translate-y-2\/4.left-0.pt-3 {
   padding-left: 8px;
   width: 100%;
 }
+
+.board_display_size {
+  align-items: center;
+  display: flex;
+  height: 36px;
+  width: 100%;
+}
+
+.board_justify_start {
+  justify-content: start;
+}
+
+.board_border {
+  border-top: 1px solid;
+  border-color: #d0d4e4;
+  border-bottom:1px solid;
+  border-bottom-color: #d0d4e4;
+  border-left: 1px solid;
+  border-left-color: #d0d4e4;
+}
+
+.long_stroke {
+  width: 70%;
+  height: 4px;
+  background-color: #cec6d4;
+  border-radius: 8px;
+}
+
+.short_stroke {
+  width: 30%;
+  height: 4px;
+  background-color: #cec6d4;
+  border-radius: 8px;
+}
+
+

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Children, useRef, useState } from "react";
 
 //
 
@@ -12,13 +12,21 @@ export default function Input({
   name,
   field,
   form,
+  value,
+  clearBtn,
+  children,
   ...rest
 }) {
   return (
     <div className={"relative " + className}>
-      <input className={classNameInput} name={name} {...field} {...rest} />
+      <input className={classNameInput} value={value} name={name} {...field} {...rest} />
 
       <div className={classNameError}>{errorMessage}</div>
+      {clearBtn && (
+       <div>{children}</div>
+      )}
+
+     
     </div>
   );
 }
