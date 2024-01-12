@@ -10,6 +10,8 @@ export default function ReviewTable({
 
   const [rows, setRows] = useState(Array.from({ length: rowNumber }));
 
+  const [selectedColumn, setSelectedColumn] = useState([]);
+
   const rowRender = () => {
     // Use map to iterate over the rows state
     return rows.map((row, index) => {
