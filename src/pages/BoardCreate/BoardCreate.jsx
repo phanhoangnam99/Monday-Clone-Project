@@ -6,8 +6,8 @@ import ColumnSelBtn from "./components/ColumnSelBtn";
 
 export default function BoardCreate() {
   const [inputValue, setInputValue] = useState("");
-  const [step, setStep] = useState(2);
-
+  const [step, setStep] = useState(1);
+  const [disabled, setDisabled] = useState(true);
   const [choosenBtn, setChoosenBtn] = useState([]);
   const [currentDesc, setCurrentDesc] = useState("");
   const inputRef = useRef();
@@ -15,18 +15,22 @@ export default function BoardCreate() {
 
   useEffect(() => {
     setChoosenBtn([{ id: "owner" }, { id: "status" }, { id: "due-date" }]);
-  }, []);
+  }, [step]);
 
   const checkBlankInput = (e) => {
     inputRef.current = e.target.value;
     console.log(inputRef);
     if (inputRef.current) {
-      btnRef.current.removeAttribute("disabled");
+      setDisabled(false);
     } else if (!inputRef.current || inputRef.current === "") {
-      btnRef.current.setAttribute("disabled", "");
+      setDisabled(true);
     }
 
     setInputValue(inputRef.current);
+  };
+
+  const handleStepChange = (newStep) => {
+    setStep(newStep);
   };
 
   const logState = (id, state) => {
@@ -294,13 +298,21 @@ export default function BoardCreate() {
                       </Input>
                     </div>
                     <div className="my-12 ps-8 pe-24 py-3 bg-allgrey-background-color">
-                      <p></p>
+                      <p>
+                        In monday.com, "boards" are the place where all your
+                        content lives.
+                      </p>
                     </div>
                     <div className="w-full mt-5 flex flex-auto ">
                       <div className=" mt-auto flex justify-end  w-full">
                         <button
-                          className=" text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] disabled:bg-disabled-background-color disabled:text-disabled-text-color"
-                          disabled
+                          className={` text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] hover:bg-[#0060b9] `}
+                          onClick={() => handleStepChange(step + 1)}
+                          style={{
+                            background: `${disabled ? `#ecedf5` : ``}`,
+                            pointerEvents: `${disabled ? "none" : "auto"}`,
+                            color: `${disabled ? `#32333861` : ``}`,
+                          }}
                           ref={btnRef}
                         >
                           <div className="flex justify-evenly ">
@@ -592,6 +604,7 @@ export default function BoardCreate() {
                         <button
                           className=" border border-solid border-[#c3c6d4] hover:bg-[#dcdfec] rounded-[5px] px-3 py-2 w-24 disabled:bg-disabled-background-color disabled:text-disabled-text-color"
                           ref={btnRef}
+                          onClick={() => handleStepChange(step - 1)}
                         >
                           <div className="flex justify-evenly ">
                             <span>{"< "}</span>
