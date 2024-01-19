@@ -80,7 +80,7 @@ export default function BoardCreate() {
                 <div className="w-full mt-5 flex flex-auto ">
                   <div className=" mt-auto flex justify-end  w-full">
                     <button
-                      className=" text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] disabled:bg-disabled-background-color disabled:text-disabled-text-color"
+                      className=" text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] hover:bg-[#0060b9] disabled:bg-disabled-background-color disabled:text-disabled-text-color"
                       disabled
                       ref={btnRef}
                     >
