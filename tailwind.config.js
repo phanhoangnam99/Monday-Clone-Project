@@ -2,7 +2,8 @@
 const withMT = require("@material-tailwind/react/utils/withMT");
 
 module.exports = withMT({
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+
   theme: {
     extend: {},
     colors: {
@@ -11,7 +12,6 @@ module.exports = withMT({
       "disabled-text-color": "#32333861",
       "color-wolf-gray": "#c3c6d4",
     },
-    
   },
   plugins: [],
 });
