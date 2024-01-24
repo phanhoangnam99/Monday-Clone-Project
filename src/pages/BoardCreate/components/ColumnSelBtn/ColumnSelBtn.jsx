@@ -9,7 +9,7 @@ export default function ColumnSelBtn({
   onClick,
   desc,
   selected,
- 
+ chosenBtn
 }) {
   // viết nội dung cho từng hàng
 
@@ -17,8 +17,13 @@ export default function ColumnSelBtn({
 
   const [isSelected, setSelected] = useState(false);
 
+  
+
+
+
+
   useEffect(() => {
-    if (selected) {
+    if (chosenBtn.find((btn)=>btn.id === id)) {
       setSelected(true);
     }
   }, []);

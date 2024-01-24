@@ -17,7 +17,7 @@ export default function BoardCreate() {
 
   useEffect(() => {
     setchosenBtn([{ id: "owner" }, { id: "status" }, { id: "due-date" }]);
-  }, [step]);
+  }, []);
 
   const checkBlankInput = (e) => {
     inputRef.current = e.target.value;
@@ -43,7 +43,7 @@ export default function BoardCreate() {
 
   const logState = (id, state) => {
     console.log(id, state);
-
+    console.log(ColSelBtn.find((col) => col.id === id));
     if (state === false) {
       const existBtn = chosenBtn.find((btn) => btn.id === id);
       console.log(existBtn);
@@ -440,6 +440,7 @@ export default function BoardCreate() {
                           icon={button.icon}
                           iconColor={button.iconColor}
                           selected={button.selected}
+                          chosenBtn={chosenBtn}
                         />
                       ))}
                     </div>
@@ -687,7 +688,6 @@ export default function BoardCreate() {
                   <div className=" mt-auto flex justify-end  w-full">
                     <button
                       className={` text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] hover:bg-[#0060b9] `}
-                      onClick={() => handleStepChange(step + 1)}
                     >
                       <div className="flex justify-evenly">
                         <span>Next</span>
