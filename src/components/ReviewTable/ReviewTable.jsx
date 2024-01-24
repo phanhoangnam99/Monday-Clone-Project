@@ -8,6 +8,7 @@ export default function ReviewTable({
   marginTop,
   content,
   selectedCol,
+  selectedRadio,
 }) {
   // Use rowNumber as the initial value for rows state
 
@@ -357,10 +358,14 @@ export default function ReviewTable({
         return (
           <>
             <div
-              className={` !border-l-[6px] !border-l-[${boardColor}]  border-solid board_border board_display_size col-[1] px-6 py-0 rounded-[8px_0px_0px]  `}
+              className={` truncate !border-l-[6px] !border-l-[${boardColor}]  border-solid board_border board_display_size col-[1] px-6 py-0 rounded-[8px_0px_0px]  `}
               style={{ borderLeftColor: `${boardColor}` }}
             >
-              <div className={`long_stroke`}></div>
+              {selectedRadio ? (
+                <div className="truncate">{selectedRadio}</div>
+              ) : (
+                <div className={`long_stroke`}></div>
+              )}
             </div>
             {/* <div
               className={`  border-solid board_border board_display_size col-[2] justify-center `}
@@ -429,10 +434,14 @@ export default function ReviewTable({
         return (
           <>
             <div
-              className={` col-[1] opacity-50 px-6 py-0 rounded-[0px_0px_0px_8px] !border-l-[6px] !border-l-[${boardColor}]  border-solid border-b board_border board_display_size  `}
+              className={` truncate col-[1] opacity-50 px-6 py-0 rounded-[0px_0px_0px_8px] !border-l-[6px] !border-l-[${boardColor}]  border-solid border-b board_border board_display_size  `}
               style={{ borderLeftColor: `${boardColor}` }}
             >
-              <div className={`long_stroke`}></div>
+              {selectedRadio ? (
+                <div className="truncate"> + Add {selectedRadio}</div>
+              ) : (
+                <div className={`long_stroke`}></div>
+              )}
             </div>
             {/* <div
               className={` col-[2] opacity-50 px-6 py-0 rounded-[0px_0px_0px_8px] !border-l-0  border-t-0 border-solid border-b board_border board_display_size  `}
@@ -475,12 +484,18 @@ export default function ReviewTable({
         return (
           <>
             <div
-              className={` !border-l-[6px] !border-l-[${boardColor}] border-solid board_border board_display_size col-[1] px-6 py-0  `}
+              className={` !border-l-[6px] !border-l-[${boardColor}]  border-solid board_border board_display_size col-[1] px-6 py-0  `}
               style={{
                 borderLeftColor: `${boardColor}`,
               }}
             >
-              <div className={`long_stroke`}></div>
+              {selectedRadio ? (
+                <div className="truncate">
+                  {selectedRadio} {index}
+                </div>
+              ) : (
+                <div className={`long_stroke`}></div>
+              )}
             </div>
 
             {index === 1 &&
@@ -531,7 +546,6 @@ export default function ReviewTable({
                 const findElement = colContent.find(
                   (element) => element.id === col.id
                 );
-                console.log(findElement);
                 return findElement.secondRow.bgColor ||
                   findElement.secondRow.minWidth ? (
                   <SingleTableCell
