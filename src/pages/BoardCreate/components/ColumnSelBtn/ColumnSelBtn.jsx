@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
 
 export default function ColumnSelBtn({
   id,
@@ -9,21 +10,21 @@ export default function ColumnSelBtn({
   onClick,
   desc,
   selected,
- 
+  chosenBtn,
 }) {
   // viết nội dung cho từng hàng
-
-
+  const { chosenView } = useSelector((state) => state.board);
 
   const [isSelected, setSelected] = useState(false);
 
   useEffect(() => {
-    if (selected) {
+    if (chosenBtn.find((btn) => btn.id === id) || chosenView === id) {
       setSelected(true);
-    }
-  }, []);
+    } else setSelected(false);
+  }, [chosenBtn,chosenView]);
   const handleClick = () => {
-    setSelected(!isSelected);
+    // setSelected(!isSelected);
+
     onClick(id, !isSelected);
   };
 

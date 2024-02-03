@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import SingleTableCell from "../SingleTableCell/SingleTableCell";
 import { Badge, Card, Typography } from "@material-tailwind/react";
+import { useSelector } from "react-redux";
+import CalendarTemplate from "../../templates/CalendarTemplate/CalendarTemplate";
+import CardsTemplate from "../../templates/CardsTemplate/CardsTemplate";
+import TimelineTemplate from "../../templates/TimelineTemplate/TimelineTemplate";
+import KanbanTemplate from "../../templates/KanbanTemplate/KanbanTemplate";
+import GanttTemplate from "../../templates/GanttTemplate/GanttTemplate";
 
 export default function ReviewTable({
   rowNumber,
@@ -8,9 +14,11 @@ export default function ReviewTable({
   marginTop,
   content,
   selectedCol,
+  selectedRadio,
 }) {
   // Use rowNumber as the initial value for rows state
 
+  const { chosenView } = useSelector((state) => state.board);
   const [rows, setRows] = useState(Array.from({ length: rowNumber }));
 
   const colContent = [
@@ -350,6 +358,7 @@ export default function ReviewTable({
   useEffect(() => {
     rowRender();
   }, [selectedColumn]);
+
   const rowRender = () => {
     // Use map to iterate over the rows state
     return rows.map((row, index) => {
@@ -357,10 +366,14 @@ export default function ReviewTable({
         return (
           <>
             <div
-              className={` !border-l-[6px] !border-l-[${boardColor}]  border-solid board_border board_display_size col-[1] px-6 py-0 rounded-[8px_0px_0px]  `}
+              className={` truncate !border-l-[6px] !border-l-[${boardColor}]  border-solid board_border board_display_size col-[1] px-6 py-0 rounded-[8px_0px_0px]  `}
               style={{ borderLeftColor: `${boardColor}` }}
             >
-              <div className={`long_stroke`}></div>
+              {selectedRadio ? (
+                <div className="truncate">{selectedRadio}</div>
+              ) : (
+                <div className={`long_stroke`}></div>
+              )}
             </div>
             {/* <div
               className={`  border-solid board_border board_display_size col-[2] justify-center `}
@@ -429,10 +442,14 @@ export default function ReviewTable({
         return (
           <>
             <div
-              className={` col-[1] opacity-50 px-6 py-0 rounded-[0px_0px_0px_8px] !border-l-[6px] !border-l-[${boardColor}]  border-solid border-b board_border board_display_size  `}
+              className={` truncate col-[1] opacity-50 px-6 py-0 rounded-[0px_0px_0px_8px] !border-l-[6px] !border-l-[${boardColor}]  border-solid border-b board_border board_display_size  `}
               style={{ borderLeftColor: `${boardColor}` }}
             >
-              <div className={`long_stroke`}></div>
+              {selectedRadio ? (
+                <div className="truncate"> + Add {selectedRadio}</div>
+              ) : (
+                <div className={`long_stroke`}></div>
+              )}
             </div>
             {/* <div
               className={` col-[2] opacity-50 px-6 py-0 rounded-[0px_0px_0px_8px] !border-l-0  border-t-0 border-solid border-b board_border board_display_size  `}
@@ -475,12 +492,18 @@ export default function ReviewTable({
         return (
           <>
             <div
-              className={` !border-l-[6px] !border-l-[${boardColor}] border-solid board_border board_display_size col-[1] px-6 py-0  `}
+              className={` !border-l-[6px] !border-l-[${boardColor}]  border-solid board_border board_display_size col-[1] px-6 py-0  `}
               style={{
                 borderLeftColor: `${boardColor}`,
               }}
             >
-              <div className={`long_stroke`}></div>
+              {selectedRadio ? (
+                <div className="truncate">
+                  {selectedRadio} {index}
+                </div>
+              ) : (
+                <div className={`long_stroke`}></div>
+              )}
             </div>
 
             {index === 1 &&
@@ -531,7 +554,6 @@ export default function ReviewTable({
                 const findElement = colContent.find(
                   (element) => element.id === col.id
                 );
-                console.log(findElement);
                 return findElement.secondRow.bgColor ||
                   findElement.secondRow.minWidth ? (
                   <SingleTableCell
@@ -589,28 +611,69 @@ export default function ReviewTable({
   }, [rowNumber]);
 
   return (
-    <div id="bang_chinh" className={`ml-8`}>
-      <div className={`flex flex-col`}>
-        <div
-          className={`grid grid-cols-[170px_repeat(${selectedColumn?.length},minmax(auto,200px))_auto];`}
-          style={{
-            gridTemplateColumns: `170px repeat(${selectedColumn?.length},minmax(auto,200px) ) auto`,
-          }}
-        >
-          <div
-            className={`col-[1] mb-2 flex items-center justify-start h-9 w-full`}
-            style={{ marginTop: `${marginTop}` }}
-          >
-            <div
-              className={` w-[70%] h-[6px] rounded-lg mb-2`}
-              style={{
-                backgroundColor: `${boardColor}`,
-              }}
-            ></div>
+    <>
+      {chosenView === "Table" && (
+        <div>
+          <div id="bang_chinh" className={`ml-8`}>
+            <div className={`flex flex-col`}>
+              <div
+                className={`grid grid-cols-[170px_repeat(${selectedColumn?.length},minmax(auto,200px))_auto];`}
+                style={{
+                  gridTemplateColumns: `170px repeat(${selectedColumn?.length},minmax(auto,200px) ) auto`,
+                }}
+              >
+                <div
+                  className={`col-[1] mb-2 flex items-center justify-start h-9 w-full`}
+                  style={{ marginTop: `${marginTop}` }}
+                >
+                  <div
+                    className={` w-[70%] h-[6px] rounded-lg mb-2`}
+                    style={{
+                      backgroundColor: `${boardColor}`,
+                    }}
+                  ></div>
+                </div>
+                {rowRender()}
+              </div>
+            </div>
           </div>
-          {rowRender()}
         </div>
-      </div>
-    </div>
+      )}
+      {chosenView === "Calendar" && (
+        <>
+          <CalendarTemplate selectedRadio={selectedRadio} />
+        </>
+      )}
+      {chosenView === "Cards" && (
+        <>
+          <CardsTemplate
+            selectedRadio={selectedRadio}
+            selectedColumn={selectedColumn}
+          />
+        </>
+      )}
+      {chosenView === "Timeline" && (
+        <>
+          <TimelineTemplate selectedRadio={selectedRadio} />
+        </>
+      )}
+      {chosenView === "Kanban" && (
+        <>
+          <KanbanTemplate
+            selectedColumn={selectedColumn}
+            selectedRadio={selectedRadio}
+          />
+        </>
+      )}
+
+      {chosenView === "Gantt" && (
+        <>
+          <GanttTemplate
+            selectedColumn={selectedColumn}
+            selectedRadio={selectedRadio}
+          />
+        </>
+      )}
+    </>
   );
 }
