@@ -4,21 +4,42 @@ import ReviewTable from "../../components/ReviewTable/ReviewTable";
 import { Checkbox } from "@material-tailwind/react";
 import ColumnSelBtn from "./components/ColumnSelBtn";
 import { Field, Form, Formik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  handleChangeView,
+  handleChangeViewColor,
+  handleChangeviewDesc,
+} from "./slices/boardSlice";
 
 export default function BoardCreate() {
   const [inputValue, setInputValue] = useState("");
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(2);
   const [disabled, setDisabled] = useState(true);
-  const [chosenBtn, setchosenBtn] = useState([]);
+  const [chosenBtn, setChosenBtn] = useState([]);
   const [currentDesc, setCurrentDesc] = useState("");
+
   const inputRef = useRef();
   const btnRef = useRef();
   const [chosenRadio, setChosenRadio] = useState("");
 
-  useEffect(() => {
-    setchosenBtn([{ id: "owner" }, { id: "status" }, { id: "due-date" }]);
-  }, []);
+  const dispatch = useDispatch();
 
+  const { chosenView, viewDesc, viewColor } = useSelector(
+    (state) => state.board
+  );
+  const [isVisited, setIsVisited] = useState([]);
+
+  useEffect(() => {
+    setChosenBtn([{ id: "owner" }, { id: "status" }, { id: "due-date" }]);
+  }, []);
+  useEffect(() => {
+    if (!isVisited.includes(step)) {
+      setIsVisited((prev) => [...prev, step]);
+    }
+    if (isVisited.includes(3)) {
+      chosenRadio || setChosenRadio("Projects");
+    }
+  }, [step, isVisited]);
   const checkBlankInput = (e) => {
     inputRef.current = e.target.value;
     console.log(inputRef);
@@ -41,29 +62,53 @@ export default function BoardCreate() {
     }
   }, [inputRef.current]);
 
+  useEffect(() => {
+    const lastOfChosenBtnArray = chosenBtn[chosenBtn.length - 1]?.id;
+    setCurrentDesc(
+      ColSelBtn.find((btn) => btn.id === lastOfChosenBtnArray)?.desc
+    );
+  }, [chosenBtn]);
+
   const logState = (id, state) => {
     console.log(id, state);
     console.log(ColSelBtn.find((col) => col.id === id));
     if (state === false) {
       const existBtn = chosenBtn.find((btn) => btn.id === id);
-      console.log(existBtn);
 
       if (existBtn) {
-        const filterdArray = chosenBtn.filter((btn) => btn.id !== existBtn.id);
+        if (chosenBtn.length !== 1) {
+          const filterdArray = chosenBtn.filter(
+            (btn) => btn.id !== existBtn.id
+          );
 
-        console.log(filterdArray);
+          setChosenBtn(filterdArray);
+        } else {
+          const lastOfChosenBtnArray = chosenBtn[chosenBtn.length - 1].id;
 
-        setchosenBtn(filterdArray);
-
-        const lastnOfchosenBtnArray = chosenBtn[chosenBtn.length - 2].id;
-        setCurrentDesc(
-          ColSelBtn.find((btn) => btn.id === lastnOfchosenBtnArray).desc
-        );
+          setCurrentDesc(
+            ColSelBtn.find((btn) => btn.id === lastOfChosenBtnArray).desc
+          );
+        }
       }
     } else if (state === true) {
-      setCurrentDesc(ColSelBtn.find((btn) => btn.id === id).desc);
+      const isViewCol = viewSelBtn.find((btn) => btn.id === id);
+      if (!isViewCol) {
+        setCurrentDesc(ColSelBtn.find((btn) => btn.id === id).desc);
 
-      setchosenBtn([...chosenBtn, { id }]);
+        setChosenBtn([...chosenBtn, { id }]);
+      } else if (isViewCol) {
+        dispatch(handleChangeView(isViewCol.id));
+        dispatch(
+          handleChangeviewDesc(
+            viewSelBtn.find((btn) => btn.id === isViewCol.id).desc
+          )
+        );
+        dispatch(
+          handleChangeViewColor(
+            viewSelBtn.find((btn) => btn.id === isViewCol.id).iconColor
+          )
+        );
+      }
     }
   };
 
@@ -255,6 +300,165 @@ export default function BoardCreate() {
       desc: "Visualize how long you and your team have to complete an item or project so everyone is aligned on start and due dates.",
     },
   ];
+  const viewSelBtn = [
+    {
+      id: "Table",
+      icon: (
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          width="16"
+          height="16"
+          aria-hidden="true"
+          class="text-white"
+          data-testid="icon"
+        >
+          <path
+            d="M13 4.5H10.5V7H13V4.5ZM14.5 4.5V7H16.5V5C16.5 4.72386 16.2761 4.5 16 4.5H14.5ZM13 8.5H10.5L10.5 11H13L13 8.5ZM14.5 11L14.5 8.5H16.5V11H14.5ZM13 12.5H10.5V15.5H13V12.5ZM14.5 15.5V12.5H16.5V15C16.5 15.2761 16.2761 15.5 16 15.5H14.5ZM4 4.5H9V7H3.5V5C3.5 4.72386 3.72386 4.5 4 4.5ZM3.5 8.5H9L9 11H3.5V8.5ZM3.5 12.5H9V15.5H4C3.72386 15.5 3.5 15.2761 3.5 15V12.5ZM4 3C2.89543 3 2 3.89543 2 5V15C2 16.1046 2.89543 17 4 17H16C17.1046 17 18 16.1046 18 15V5C18 3.89543 17.1046 3 16 3H4Z"
+            fill="currentColor"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      ),
+      label: "Table",
+      onClick: logState,
+      iconColor: "#784bd1",
+      desc: "Table view is your default layout. Plan, track and manage anything using a visual board.",
+      selected: true,
+    },
+    {
+      id: "Timeline",
+      icon: (
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          width="16"
+          height="16"
+          aria-hidden="true"
+          class="text-white"
+          data-testid="icon"
+        >
+          <path
+            d="M13 5H4.67871M16.3205 10.2148H8.49902M10.5 15.4287H5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      ),
+      label: "Timeline",
+      onClick: logState,
+      iconColor: "#fdab3d",
+      desc: "Stay on track with visual deadlines and timelines.",
+    },
+    {
+      id: "Calendar",
+      icon: (
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          width="16"
+          height="16"
+          aria-hidden="true"
+          class="text-white"
+          data-testid="icon"
+        >
+          <path
+            d="M6.83801 3C6.83801 2.58579 6.50223 2.25 6.08801 2.25C5.6738 2.25 5.33801 2.58579 5.33801 3V5.15381V7.30769C5.33801 7.72191 5.6738 8.05769 6.08801 8.05769C6.50223 8.05769 6.83801 7.72191 6.83801 7.30769V5.90381H11.4726C11.8868 5.90381 12.2226 5.56802 12.2226 5.15381C12.2226 4.73959 11.8868 4.40381 11.4726 4.40381H6.83801V3ZM2.64227 4.9389C2.98489 4.59629 3.44957 4.40381 3.9341 4.40381C4.34831 4.40381 4.6841 4.73959 4.6841 5.15381C4.6841 5.56802 4.34831 5.90381 3.9341 5.90381C3.8474 5.90381 3.76424 5.93825 3.70293 5.99956C3.64162 6.06087 3.60718 6.14403 3.60718 6.23073V8.71149H16.1072V6.23073C16.1072 6.14403 16.0727 6.06087 16.0114 5.99956C15.9501 5.93825 15.867 5.90381 15.7803 5.90381H14.3765V7.30769C14.3765 7.72191 14.0407 8.05769 13.6265 8.05769C13.2123 8.05769 12.8765 7.72191 12.8765 7.30769V5.16301L12.8764 5.15381L12.8765 5.1446V3C12.8765 2.58579 13.2123 2.25 13.6265 2.25C14.0407 2.25 14.3765 2.58579 14.3765 3V4.40381H15.7803C16.2648 4.40381 16.7295 4.59629 17.0721 4.9389C17.4147 5.28152 17.6072 5.7462 17.6072 6.23073V9.46149V15.923C17.6072 16.4076 17.4147 16.8723 17.0721 17.2149C16.7295 17.5575 16.2648 17.75 15.7803 17.75H3.9341C3.44957 17.75 2.98489 17.5575 2.64227 17.2149C2.29966 16.8723 2.10718 16.4076 2.10718 15.923V9.46149V6.23073C2.10718 5.7462 2.29966 5.28152 2.64227 4.9389ZM3.60718 15.923V10.2115H16.1072V15.923C16.1072 16.0097 16.0727 16.0929 16.0114 16.1542C15.9501 16.2155 15.867 16.25 15.7803 16.25H3.9341C3.8474 16.25 3.76424 16.2155 3.70293 16.1542C3.64162 16.0929 3.60718 16.0097 3.60718 15.923Z"
+            fill="currentColor"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      ),
+      label: "Calendar",
+      onClick: logState,
+      iconColor: "#faa1f1",
+      desc: "See all upcoming content and due dates at a glance.",
+    },
+    {
+      id: "Cards",
+      icon: (
+        <svg
+          viewBox="0 0 17 17"
+          fill="currentColor"
+          width="16"
+          height="16"
+          aria-hidden="true"
+          class="icon_fd9afdf75b noFocusStyle_90bb7af8c7"
+          data-testid="icon"
+        >
+          <path
+            d="M2.25 16.1C1.00736 16.1 0 15.0926 0 13.85V2.25C0 1.00736 1.00736 0 2.25 0H8.25C9.49264 0 10.5 1.00736 10.5 2.25L10.5 13.85C10.5 15.0926 9.49264 16.1 8.25 16.1H2.25ZM1.5 13.85C1.5 14.2642 1.83579 14.6 2.25 14.6H8.25C8.66422 14.6 9 14.2642 9 13.85L9 2.25C9 1.83579 8.66421 1.5 8.25 1.5L2.25 1.5C1.83579 1.5 1.5 1.83579 1.5 2.25L1.5 13.85Z"
+            fill="currentColor"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+          ></path>
+          <path
+            d="M12.5498 14.8002C12.1356 14.8002 11.7998 14.4644 11.7998 14.0502L11.7998 2.0502C11.7998 1.63598 12.1356 1.3002 12.5498 1.3002 12.964 1.3002 13.2998 1.63598 13.2998 2.0502L13.2998 14.0502C13.2998 14.4644 12.964 14.8002 12.5498 14.8002zM14.5996 13.3837C14.5996 13.7979 14.9354 14.1337 15.3496 14.1337 15.7638 14.1337 16.0996 13.7979 16.0996 13.3837V2.71703C16.0996 2.30281 15.7638 1.96703 15.3496 1.96703 14.9354 1.96703 14.5996 2.30281 14.5996 2.71703L14.5996 13.3837z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      ),
+      label: "Cards",
+      onClick: logState,
+      iconColor: "#ff642e",
+      desc: "See all your item details in a visual gallery.",
+    },
+    {
+      id: "Kanban",
+      icon: (
+        <svg
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          width="16"
+          height="16"
+          aria-hidden="true"
+          class="text-white"
+          data-testid="icon"
+        >
+          <path
+            d="M9.44764 16.0003C9.90548 16.0003 10.3446 15.818 10.6683 15.4935C10.992 15.1689 11.1739 14.7288 11.1739 14.2698L11.174 8.00927H14.2738C14.7316 8.00927 15.1707 7.82695 15.4945 7.50241C15.8182 7.17786 16.0001 6.73769 16.0001 6.27872V0.763162C16.0001 0.341807 15.6593 0.000230184 15.239 0.000230148L10.4129 0.000229726C10.4085 0.000229725 10.4042 0.000265964 10.3998 0.000340351L5.6101 0.000339932C5.60249 0.000114864 5.59485 4.22584e-07 5.58718 4.21914e-07L0.761045 0C0.340732 -3.67449e-08 7.41769e-07 0.341577 7.04933e-07 0.762932L0 9.82643C-4.01246e-08 10.2854 0.181876 10.7256 0.505614 11.0501C0.829352 11.3747 1.26844 11.557 1.72627 11.557H4.82576L4.82569 14.2698C4.82569 14.7288 5.00757 15.1689 5.33131 15.4935C5.65504 15.818 6.09413 16.0003 6.55196 16.0003H9.44764ZM4.82591 1.52586L4.82578 10.0311H1.72627C1.67212 10.0311 1.62018 10.0096 1.58189 9.97117C1.5436 9.93278 1.52209 9.88072 1.52209 9.82643L1.52209 1.52586L4.82591 1.52586ZM6.34786 9.8175L6.34778 14.2698C6.34778 14.3241 6.36929 14.3761 6.40758 14.4145C6.44587 14.4529 6.49781 14.4745 6.55196 14.4745H9.44764C9.50179 14.4745 9.55373 14.4529 9.59202 14.4145C9.63031 14.3761 9.65182 14.3241 9.65182 14.2698L9.65197 7.26015C9.65189 7.25556 9.65185 7.25095 9.65185 7.24634V1.5262L6.34822 1.5262L6.34822 9.79405C6.34822 9.80188 6.3481 9.8097 6.34786 9.8175ZM11.1741 6.48341L11.1741 1.52609L14.478 1.52609V6.27872C14.478 6.33301 14.4565 6.38507 14.4182 6.42346C14.3799 6.46184 14.328 6.48341 14.2738 6.48341H11.1741Z"
+            fill="currentColor"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      ),
+      label: "Kanban",
+      onClick: logState,
+      iconColor: "#2b76e5",
+      desc: "Prioritize and balance work according to capacity.",
+    },
+    {
+      id: "Gantt",
+      icon: (
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          width="16"
+          height="16"
+          aria-hidden="true"
+          class="text-white"
+          data-testid="icon"
+        >
+          <path
+            d="M10.8214 5H3M13.8214 10.2144H6M16.3429 15.4287H8"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      ),
+      label: "Gantt",
+      onClick: logState,
+      iconColor: "#037f4c",
+      desc: "Visualize project milestones and dependencies.",
+    },
+  ];
 
   const [order, setOrder] = useState();
 
@@ -386,23 +590,103 @@ export default function BoardCreate() {
                           id="#cai_gi_do"
                           className="flex flex-row justify-between mt-2 mr-8 mb-4"
                         >
-                          <div className="flex flex-row h-[42px] pointer-events-none"></div>
+                          <div className="flex flex-row h-[42px] pointer-events-none">
+                            {isVisited.includes(4) && chosenView === "Table" ? (
+                              <>
+                                <div
+                                  className="w-full py-1 px-4   relative flex justify-center "
+                                  id="viewMode"
+                                >
+                                  <span className="text-lg mx-auto ">
+                                    Table
+                                  </span>
+                                </div>
+                                <div className=" !mt-[2%]">
+                                  <span>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke-width="1.5"
+                                      stroke="currentColor"
+                                      class="w-6 h-6"
+                                    >
+                                      <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M12 4.5v15m7.5-7.5h-15"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </>
+                            ) : (
+                              isVisited.includes(4) && (
+                                <>
+                                  <div className="w-full  flex   border-b-[3px] border-b-gray-500 ">
+                                    <span className="text-lg py-1 px-4 mx-auto">
+                                      Table
+                                    </span>
+                                  </div>
+                                  <div
+                                    className=" relative flex w-full   "
+                                    id="viewMode"
+                                  >
+                                    <span className="text-lg relative py-1 px-4  mx-auto">
+                                      {chosenView}
+                                    </span>
+                                  </div>
+                                  <div className=" mt-[2%] ">
+                                    <span>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="w-6 h-6"
+                                      >
+                                        <path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M12 4.5v15m7.5-7.5h-15"
+                                        />
+                                      </svg>
+                                    </span>
+                                  </div>
+                                </>
+                              )
+                            )}
+                          </div>
                         </div>
                       </div>
                       <div id="ec" className="overflow-y-scroll">
-                        <ReviewTable
-                          rowNumber={5}
-                          boardColor="#559afd"
-                          selectedCol={chosenBtn}
-                          selectedRadio={chosenRadio}
-                        />
-                        <ReviewTable
-                          rowNumber={2}
-                          boardColor="#00c875"
-                          marginTop="32px"
-                          selectedCol={chosenBtn}
-                          selectedRadio={chosenRadio}
-                        />
+                        {chosenView === "Table" ? (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                            <ReviewTable
+                              rowNumber={2}
+                              boardColor="#00c875"
+                              marginTop="32px"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -524,23 +808,103 @@ export default function BoardCreate() {
                           id="#cai_gi_do"
                           className="flex flex-row justify-between mt-2 mr-8 mb-4"
                         >
-                          <div className="flex flex-row h-[42px] pointer-events-none"></div>
+                          <div className="flex flex-row h-[42px] pointer-events-none">
+                            {isVisited.includes(4) && chosenView === "Table" ? (
+                              <>
+                                <div
+                                  className="w-full py-1 px-4   relative flex justify-center "
+                                  id="viewMode"
+                                >
+                                  <span className="text-lg mx-auto ">
+                                    Table
+                                  </span>
+                                </div>
+                                <div className=" !mt-[2%]">
+                                  <span>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke-width="1.5"
+                                      stroke="currentColor"
+                                      class="w-6 h-6"
+                                    >
+                                      <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M12 4.5v15m7.5-7.5h-15"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </>
+                            ) : (
+                              isVisited.includes(4) && (
+                                <>
+                                  <div className="w-full  flex   border-b-[3px] border-b-gray-500 ">
+                                    <span className="text-lg py-1 px-4 mx-auto">
+                                      Table
+                                    </span>
+                                  </div>
+                                  <div
+                                    className=" relative flex w-full   "
+                                    id="viewMode"
+                                  >
+                                    <span className="text-lg relative py-1 px-4  mx-auto">
+                                      {chosenView}
+                                    </span>
+                                  </div>
+                                  <div className=" mt-[2%] ">
+                                    <span>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="w-6 h-6"
+                                      >
+                                        <path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M12 4.5v15m7.5-7.5h-15"
+                                        />
+                                      </svg>
+                                    </span>
+                                  </div>
+                                </>
+                              )
+                            )}
+                          </div>
                         </div>
                       </div>
                       <div className="overflow-x-scroll">
-                        <ReviewTable
-                          rowNumber={5}
-                          boardColor="#559afd"
-                          selectedCol={chosenBtn}
-                          selectedRadio={chosenRadio}
-                        />
-                        <ReviewTable
-                          rowNumber={2}
-                          boardColor="#00c875"
-                          marginTop="32px"
-                          selectedCol={chosenBtn}
-                          selectedRadio={chosenRadio}
-                        />
+                        {chosenView === "Table" ? (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                            <ReviewTable
+                              rowNumber={2}
+                              boardColor="#00c875"
+                              marginTop="32px"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -565,7 +929,7 @@ export default function BoardCreate() {
                     <div className="w-full relative flex gap-2 flex-wrap">
                       <Formik
                         initialValues={{
-                          picked: "",
+                          picked: "Projects",
                         }}
                         onSubmit={async (values) => {
                           await new Promise((r) => setTimeout(r, 500));
@@ -583,20 +947,6 @@ export default function BoardCreate() {
                                 <Field
                                   type="radio"
                                   name="picked"
-                                  value="Tasks"
-                                  className="m-2"
-                                  checked={values.picked === "Tasks"}
-                                  onChange={() => {
-                                    setFieldValue("picked", "Tasks");
-                                    setChosenRadio("Tasks");
-                                  }}
-                                />
-                                Tasks
-                              </label>
-                              <label>
-                                <Field
-                                  type="radio"
-                                  name="picked"
                                   value="Projects"
                                   className="m-2"
                                   checked={values.picked === "Projects"}
@@ -606,6 +956,20 @@ export default function BoardCreate() {
                                   }}
                                 />
                                 Projects
+                              </label>
+                              <label>
+                                <Field
+                                  type="radio"
+                                  name="picked"
+                                  value="Tasks"
+                                  className="m-2"
+                                  checked={values.picked === "Tasks"}
+                                  onChange={() => {
+                                    setFieldValue("picked", "Tasks");
+                                    setChosenRadio("Tasks");
+                                  }}
+                                />
+                                Tasks
                               </label>
                               <label>
                                 <div className="flex items-center">
@@ -647,9 +1011,12 @@ export default function BoardCreate() {
                                       );
                                     }}
                                     classNameInput="w-1/2 ml-3 p-1 outline-none border border-gray-300 focus:border-[#0073ea] hover:border-[#323338] rounded-md focus:shadow-sm"
-                                    onChange={(e) =>
-                                      setChosenRadio(e.target.value)
-                                    }
+                                    onChange={(e) => {
+                                      setChosenRadio(e.target.value);
+                                      if (!e.target.value) {
+                                        setChosenRadio("Projects");
+                                      }
+                                    }}
                                   />
                                 </div>
                               </label>
@@ -688,6 +1055,7 @@ export default function BoardCreate() {
                   <div className=" mt-auto flex justify-end  w-full">
                     <button
                       className={` text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] hover:bg-[#0060b9] `}
+                      onClick={() => handleStepChange(step + 1)}
                     >
                       <div className="flex justify-evenly">
                         <span>Next</span>
@@ -737,23 +1105,319 @@ export default function BoardCreate() {
                           id="#cai_gi_do"
                           className="flex flex-row justify-between mt-2 mr-8 mb-4"
                         >
-                          <div className="flex flex-row h-[42px] pointer-events-none"></div>
+                          <div className="flex flex-row h-[42px] pointer-events-none">
+                            {isVisited.includes(4) && chosenView === "Table" ? (
+                              <>
+                                <div
+                                  className="w-full py-1 px-4   relative flex justify-center "
+                                  id="viewMode"
+                                >
+                                  <span className="text-lg mx-auto ">
+                                    Table
+                                  </span>
+                                </div>
+                                <div className=" !mt-[2%]">
+                                  <span>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke-width="1.5"
+                                      stroke="currentColor"
+                                      class="w-6 h-6"
+                                    >
+                                      <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M12 4.5v15m7.5-7.5h-15"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </>
+                            ) : (
+                              isVisited.includes(4) && (
+                                <>
+                                  <div className="w-full  flex   border-b-[3px] border-b-gray-500 ">
+                                    <span className="text-lg py-1 px-4 mx-auto">
+                                      Table
+                                    </span>
+                                  </div>
+                                  <div
+                                    className=" relative flex w-full   "
+                                    id="viewMode"
+                                  >
+                                    <span className="text-lg relative py-1 px-4  mx-auto">
+                                      {chosenView}
+                                    </span>
+                                  </div>
+                                  <div className=" mt-[2%] ">
+                                    <span>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="w-6 h-6"
+                                      >
+                                        <path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M12 4.5v15m7.5-7.5h-15"
+                                        />
+                                      </svg>
+                                    </span>
+                                  </div>
+                                </>
+                              )
+                            )}
+                          </div>
                         </div>
                       </div>
                       <div className="overflow-x-scroll">
-                        <ReviewTable
-                          rowNumber={5}
-                          boardColor="#559afd"
-                          selectedCol={chosenBtn}
-                          selectedRadio={chosenRadio}
+                        {chosenView === "Table" ? (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                            <ReviewTable
+                              rowNumber={2}
+                              boardColor="#00c875"
+                              marginTop="32px"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {step === 4 && (
+        <div>
+          <div className="grid sm:grid-cols-12 auto-cols-auto h-[100vh]">
+            <div className="lg:col-span-6 col-span-12   grid">
+              <div className="md:px-32 md:py-16 flex flex-col md:justify-start justify-start items-center ">
+                <div className=" flex flex-col  w-[80%] md:w-full h-full justify-center">
+                  <div className="mb-6">
+                    <div className=" text-3xl  py-4 mt-6">
+                      <p>Add a view layout</p>
+                    </div>
+                    <div className="flex flex-wrap "></div>
+                    <div>
+                      <p className="color-[#323338]">
+                        Choose from the most popular column types for your work
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex  flex-col justify-center items-start mt-3 text-sm sm:text-base">
+                    <div className="w-full relative flex gap-2 flex-wrap">
+                      {viewSelBtn.map((button) => (
+                        <ColumnSelBtn
+                          onClick={button.onClick}
+                          id={button.id}
+                          label={button.label}
+                          icon={button.icon}
+                          iconColor={button.iconColor}
+                          selected={button.selected}
+                          chosenBtn={chosenBtn}
                         />
-                        <ReviewTable
-                          rowNumber={2}
-                          boardColor="#00c875"
-                          marginTop="32px"
-                          selectedCol={chosenBtn}
-                          selectedRadio={chosenRadio}
-                        />
+                      ))}
+                    </div>
+                    {
+                      <div
+                        className={`rounded-md  box-content flex items-center	mb-40 bg-allgrey-background-color lg:mt-12 lg:mb-40 my-8 ps-3 lg:pe-16 py-3 pe-5  lg:h-14 h-10 ${
+                          !viewDesc ? "invisible" : "visible"
+                        } `}
+                        style={{ borderLeft: `8px solid ${viewColor}` }}
+                      >
+                        <p className="  box-content text-xs lg:text-sm ">
+                          {viewDesc}
+                        </p>
+                      </div>
+                    }
+                  </div>
+                </div>
+                <div className="w-full mt-5 flex flex-auto ">
+                  <div className=" mt-auto flex justify-between  w-full">
+                    <div className="justify-evenly">
+                      <button
+                        className={` border-2 rounded-[5px] px-3 py-2 w-24 bg-[#ffffff] hover:bg-[#dcdfec] `}
+                        onClick={() => handleStepChange(step - 1)}
+                      >
+                        <div className="flex justify-evenly ">
+                          <span>{"<"}</span>
+                          <span>Back</span>
+                        </div>
+                      </button>
+                    </div>
+                    <div className="justify-evenly">
+                      <button
+                        className={` text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] hover:bg-[#0060b9] `}
+                        onClick={() => handleStepChange(step + 1)}
+                      >
+                        <div className="flex justify-evenly ">
+                          <span>Next</span>
+                          <span>{">"}</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-6  lg:grid hidden bg-allgrey-background-color h-[100vh]">
+              <div className="relative">
+                <div className="flex justify-end p-2">
+                  <button className="flex justify-center items-center w-10 h-10">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18 18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div id="cai_bang">
+                  <div className="bg-[#fff] [box-shadow:0px_4px_6px_-4px_rgba(0,_0,_0,_0.1)] [box-sizing:initial] flex [filter:drop-shadow(-10px_10px_30px_rgba(29,140,242,.3))] flex-col h-[555px] overflow-y-auto pt-[32px] absolute right-[0] top-2/4 -translate-y-1/2 [transition:transform_.2s_ease-in-out] w-[90%]">
+                    <div className="flex flex-col flex-1 overflow-hidden">
+                      <div className="ml-8">
+                        {!inputValue ? (
+                          <div className="flex board_display_size">
+                            <div className="my-3 w-[30%] h-2 bg-[#c3c6d4] rounded-lg"></div>
+                          </div>
+                        ) : (
+                          <div className="flex board_display_size">
+                            <h1 className="truncate text-[#656789] [font-weight:500] text-3xl">
+                              {inputValue}
+                            </h1>
+                          </div>
+                        )}
+                        <div className="flex flex-row justify-between mt-2 mr-8 mb-4">
+                          <div className="flex flex-row h-[42px] pointer-events-none">
+                            {isVisited.includes(4) && chosenView === "Table" ? (
+                              <>
+                                <div
+                                  className="w-full py-1 px-4   relative flex justify-center "
+                                  id="viewMode"
+                                >
+                                  <span className="text-lg mx-auto ">
+                                    Table
+                                  </span>
+                                </div>
+                                <div className=" !mt-[2%]">
+                                  <span>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke-width="1.5"
+                                      stroke="currentColor"
+                                      class="w-6 h-6"
+                                    >
+                                      <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M12 4.5v15m7.5-7.5h-15"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </>
+                            ) : (
+                              isVisited.includes(4) && (
+                                <>
+                                  <div className="w-full  flex   border-b-[3px] border-b-gray-500 ">
+                                    <span className="text-lg py-1 px-4 mx-auto">
+                                      Table
+                                    </span>
+                                  </div>
+                                  <div
+                                    className=" relative flex w-full   "
+                                    id="viewMode"
+                                  >
+                                    <span className="text-lg relative py-1 px-4  mx-auto">
+                                      {chosenView}
+                                    </span>
+                                  </div>
+                                  <div className=" mt-[2%] ">
+                                    <span>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="w-6 h-6"
+                                      >
+                                        <path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M12 4.5v15m7.5-7.5h-15"
+                                        />
+                                      </svg>
+                                    </span>
+                                  </div>
+                                </>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="overflow-x-scroll">
+                        {chosenView === "Table" ? (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                            <ReviewTable
+                              rowNumber={2}
+                              boardColor="#00c875"
+                              marginTop="32px"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                            />
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -46,4 +46,33 @@ span.absolute.top-2\/4.-translate-y-2\/4.left-0.pt-3 {
   border-radius: 8px;
 }
 
+@keyframes expand {
+  0% {
+    scale: 0;
+    background: transparent;
+  }
+  100% {
+    scale: 1;
+    background: blue;
+  }
+}
 
+#viewMode:after {
+  content: "";
+  height: 3px;
+  width: 100%;
+  background: #0073ea;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  animation: expand 0.2s ease-in-out;
+}
+
+// #divider:after {
+//   content: "";
+//   position: absolute;
+//   right: 50%;
+//   top: 0;
+//   bottom: 0;
+//   border-left: 1px solid black;
+// }

@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import SingleTableCell from "../SingleTableCell/SingleTableCell";
 import { Badge, Card, Typography } from "@material-tailwind/react";
+import { useSelector } from "react-redux";
+import CalendarTemplate from "../../templates/CalendarTemplate/CalendarTemplate";
+import CardsTemplate from "../../templates/CardsTemplate/CardsTemplate";
+import TimelineTemplate from "../../templates/TimelineTemplate/TimelineTemplate";
+import KanbanTemplate from "../../templates/KanbanTemplate/KanbanTemplate";
+import GanttTemplate from "../../templates/GanttTemplate/GanttTemplate";
 
 export default function ReviewTable({
   rowNumber,
@@ -12,6 +18,7 @@ export default function ReviewTable({
 }) {
   // Use rowNumber as the initial value for rows state
 
+  const { chosenView } = useSelector((state) => state.board);
   const [rows, setRows] = useState(Array.from({ length: rowNumber }));
 
   const colContent = [
@@ -351,6 +358,7 @@ export default function ReviewTable({
   useEffect(() => {
     rowRender();
   }, [selectedColumn]);
+
   const rowRender = () => {
     // Use map to iterate over the rows state
     return rows.map((row, index) => {
@@ -603,28 +611,69 @@ export default function ReviewTable({
   }, [rowNumber]);
 
   return (
-    <div id="bang_chinh" className={`ml-8`}>
-      <div className={`flex flex-col`}>
-        <div
-          className={`grid grid-cols-[170px_repeat(${selectedColumn?.length},minmax(auto,200px))_auto];`}
-          style={{
-            gridTemplateColumns: `170px repeat(${selectedColumn?.length},minmax(auto,200px) ) auto`,
-          }}
-        >
-          <div
-            className={`col-[1] mb-2 flex items-center justify-start h-9 w-full`}
-            style={{ marginTop: `${marginTop}` }}
-          >
-            <div
-              className={` w-[70%] h-[6px] rounded-lg mb-2`}
-              style={{
-                backgroundColor: `${boardColor}`,
-              }}
-            ></div>
+    <>
+      {chosenView === "Table" && (
+        <div>
+          <div id="bang_chinh" className={`ml-8`}>
+            <div className={`flex flex-col`}>
+              <div
+                className={`grid grid-cols-[170px_repeat(${selectedColumn?.length},minmax(auto,200px))_auto];`}
+                style={{
+                  gridTemplateColumns: `170px repeat(${selectedColumn?.length},minmax(auto,200px) ) auto`,
+                }}
+              >
+                <div
+                  className={`col-[1] mb-2 flex items-center justify-start h-9 w-full`}
+                  style={{ marginTop: `${marginTop}` }}
+                >
+                  <div
+                    className={` w-[70%] h-[6px] rounded-lg mb-2`}
+                    style={{
+                      backgroundColor: `${boardColor}`,
+                    }}
+                  ></div>
+                </div>
+                {rowRender()}
+              </div>
+            </div>
           </div>
-          {rowRender()}
         </div>
-      </div>
-    </div>
+      )}
+      {chosenView === "Calendar" && (
+        <>
+          <CalendarTemplate selectedRadio={selectedRadio} />
+        </>
+      )}
+      {chosenView === "Cards" && (
+        <>
+          <CardsTemplate
+            selectedRadio={selectedRadio}
+            selectedColumn={selectedColumn}
+          />
+        </>
+      )}
+      {chosenView === "Timeline" && (
+        <>
+          <TimelineTemplate selectedRadio={selectedRadio} />
+        </>
+      )}
+      {chosenView === "Kanban" && (
+        <>
+          <KanbanTemplate
+            selectedColumn={selectedColumn}
+            selectedRadio={selectedRadio}
+          />
+        </>
+      )}
+
+      {chosenView === "Gantt" && (
+        <>
+          <GanttTemplate
+            selectedColumn={selectedColumn}
+            selectedRadio={selectedRadio}
+          />
+        </>
+      )}
+    </>
   );
 }
