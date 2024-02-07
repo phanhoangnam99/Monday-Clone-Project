@@ -1273,7 +1273,7 @@ export default function BoardCreate() {
                     <div className="justify-evenly">
                       <button
                         className={` text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] hover:bg-[#0060b9] `}
-                        onClick={() => handleStepChange(step + 1)}
+                
                       >
                         <div className="flex justify-evenly ">
                           <span>Next</span>
