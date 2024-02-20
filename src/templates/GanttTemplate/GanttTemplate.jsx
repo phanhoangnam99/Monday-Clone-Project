@@ -1,13 +1,37 @@
 import React from "react";
 
-export default function GanttTemplate({ selectedRadio, selectedColumn }) {
+export default function GanttTemplate({
+  selectedRadio,
+  isCustomManagedObject,
+  customManagedObjectValue,
+  selectedColumn,
+}) {
   return (
     <div>
       <div className="flex flex-row gap-3">
         <div className="flex flex-col ml-16 whitespace-nowrap mt-20  gap-[3.4rem]">
-          <span className="truncate w-[90px]">{selectedRadio} 1</span>
-          <span className="truncate w-[90px]">{selectedRadio} 2</span>
-          <span className="truncate w-[90px]">{selectedRadio} 3</span>
+          <span className="truncate w-[90px]">
+            {isCustomManagedObject &&
+              !customManagedObjectValue.first &&
+              "Project 1"}
+            {isCustomManagedObject && customManagedObjectValue.first}
+            {!isCustomManagedObject && customManagedObjectValue.first}{" "}
+          </span>
+          <span className="truncate w-[90px]">
+            {isCustomManagedObject &&
+              !customManagedObjectValue.second &&
+              "Project 2"}
+            {isCustomManagedObject && customManagedObjectValue.second}
+            {!isCustomManagedObject && customManagedObjectValue.second}{" "}
+          </span>
+          <span className="truncate w-[90px]">
+            {" "}
+            {isCustomManagedObject &&
+              !customManagedObjectValue.third &&
+              "Project 3"}
+            {isCustomManagedObject && customManagedObjectValue.third}
+            {!isCustomManagedObject && customManagedObjectValue.third}{" "}
+          </span>
         </div>
         <div>
           <table className="relative">
@@ -42,7 +66,12 @@ export default function GanttTemplate({ selectedRadio, selectedColumn }) {
                       overflow: "hidden",
                     }}
                   >
-                    {selectedRadio} 1
+                    {isCustomManagedObject &&
+                      !customManagedObjectValue.first &&
+                      "Project 1"}
+                    {isCustomManagedObject && customManagedObjectValue.first}
+                    {!isCustomManagedObject &&
+                      customManagedObjectValue.first}{" "}
                   </span>
                 </div>
               </td>
@@ -67,7 +96,14 @@ export default function GanttTemplate({ selectedRadio, selectedColumn }) {
               <td className="  relative p-0" id="divider"></td>
               <td colSpan={2} className="p-0 max-w-[90px]">
                 <div className=" select-none  relative  w-[100%] flex justify-center  rounded-sm hover:bg-[#70b4ff] bg-[#579bfc] justify-center text-white ">
-                  <span className="truncate">{selectedRadio} 2</span>
+                  <span className="truncate">
+                    {isCustomManagedObject &&
+                      !customManagedObjectValue.second &&
+                      "Project 2"}
+                    {isCustomManagedObject && customManagedObjectValue.second}
+                    {!isCustomManagedObject &&
+                      customManagedObjectValue.second}{" "}
+                  </span>
                 </div>
               </td>
               <td className="border-r border-[#c3c6d3]"></td>
@@ -82,13 +118,26 @@ export default function GanttTemplate({ selectedRadio, selectedColumn }) {
               <td className="border-r border-[#c3c6d3] !border-b-0 h-14"></td>
             </tr>
             <tr>
-              <td className=" border-r border-[#c3c6d3] border-l relative p-0" id="divider"></td>
-              <td className="  relative p-0 border-[#c3c6d3] border-r" id="divider"></td>
+              <td
+                className=" border-r border-[#c3c6d3] border-l relative p-0"
+                id="divider"
+              ></td>
+              <td
+                className="  relative p-0 border-[#c3c6d3] border-r"
+                id="divider"
+              ></td>
               <td className="border-r border-[#c3c6d3]"></td>
               <td className="border-r border-[#c3c6d3]"></td>
               <td colSpan={2} className="p-0 max-w-[90px]">
                 <div className=" select-none  relative  w-[100%] flex justify-center  rounded-sm hover:bg-[#70b4ff] bg-[#579bfc] justify-center text-white ">
-                  <span className="truncate">{selectedRadio} 3</span>
+                  <span className="truncate">
+                    {isCustomManagedObject &&
+                      !customManagedObjectValue.third &&
+                      "Project 3"}
+                    {isCustomManagedObject && customManagedObjectValue.third}
+                    {!isCustomManagedObject &&
+                      customManagedObjectValue.third}{" "}
+                  </span>
                 </div>
               </td>
             </tr>

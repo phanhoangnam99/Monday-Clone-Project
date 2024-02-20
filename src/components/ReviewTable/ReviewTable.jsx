@@ -12,9 +12,10 @@ export default function ReviewTable({
   rowNumber,
   boardColor,
   marginTop,
-  content,
   selectedCol,
   selectedRadio,
+  isCustomManagedObject,
+  customManagedObjectValue,
 }) {
   // Use rowNumber as the initial value for rows state
 
@@ -497,13 +498,115 @@ export default function ReviewTable({
                 borderLeftColor: `${boardColor}`,
               }}
             >
-              {selectedRadio ? (
+              {!selectedRadio && !isCustomManagedObject && (
+                <div className="long_stroke"></div>
+              )}
+              {isCustomManagedObject &&
+                Object.values(customManagedObjectValue).every(
+                  (value) => value === selectedRadio
+                ) && (
+                  <>
+                    {" "}
+                    {index === 1 &&
+                      (customManagedObjectValue.first ? (
+                        <div className="truncate">
+                          {customManagedObjectValue.first} {index}
+                        </div>
+                      ) : (
+                        <></>
+                      ))}
+                    {index === 2 &&
+                      (customManagedObjectValue.second ? (
+                        <div className="truncate">
+                          {customManagedObjectValue.second} {index}
+                        </div>
+                      ) : (
+                        <></>
+                      ))}
+                    {index === 3 &&
+                      (customManagedObjectValue.third ? (
+                        <div className="truncate">
+                          {customManagedObjectValue.third} {index}
+                        </div>
+                      ) : (
+                        <></>
+                      ))}
+                  </>
+                )}
+
+              {isCustomManagedObject &&
+                customManagedObjectValue &&
+                Object.values(customManagedObjectValue).some(
+                  (value) => value !== selectedRadio
+                ) && (
+                  <>
+                    {" "}
+                    {index === 1 &&
+                      (customManagedObjectValue.first ? (
+                        <div className="truncate">
+                          {customManagedObjectValue.first}
+                        </div>
+                      ) : (
+                        <div className="">Project {index}</div>
+                      ))}
+                    {index === 2 &&
+                      (customManagedObjectValue.second ? (
+                        <div className="truncate">
+                          {customManagedObjectValue.second}
+                        </div>
+                      ) : (
+                        <div className="">Project {index}</div>
+                      ))}
+                    {index === 3 &&
+                      (customManagedObjectValue.third ? (
+                        <div className="truncate">
+                          {customManagedObjectValue.third}
+                        </div>
+                      ) : (
+                        <div className="">Project {index}</div>
+                      ))}
+                  </>
+                )}
+
+              {/* {selectedRadio && !isCustomManagedObject && (
                 <div className="truncate">
                   {selectedRadio} {index}
                 </div>
-              ) : (
-                <div className={`long_stroke`}></div>
-              )}
+              )} */}
+
+              {!isCustomManagedObject &&
+                customManagedObjectValue &&
+                Object.values(customManagedObjectValue).some(
+                  (value) => value !== selectedRadio
+                ) && (
+                  <>
+                    {" "}
+                    {index === 1 &&
+                      (customManagedObjectValue.first ? (
+                        <div className="truncate">
+                          {customManagedObjectValue.first}
+                        </div>
+                      ) : (
+                        <div className="">Project {index}</div>
+                      ))}
+                    {index === 2 &&
+                      (customManagedObjectValue.second ? (
+                        <div className="truncate">
+                          {customManagedObjectValue.second}
+                        </div>
+                      ) : (
+                        <div className="">Project {index}</div>
+                      ))}
+                    {index === 3 &&
+                      (customManagedObjectValue.third ? (
+                        <div className="truncate">
+                          {customManagedObjectValue.third}
+                        </div>
+                      ) : (
+                        <div className="">Project {index}</div>
+                      ))}
+                  </>
+                )}
             </div>
 
             {index === 1 &&
@@ -641,7 +744,11 @@ export default function ReviewTable({
       )}
       {chosenView === "Calendar" && (
         <>
-          <CalendarTemplate selectedRadio={selectedRadio} />
+          <CalendarTemplate
+            selectedRadio={selectedRadio}
+            isCustomManagedObject={isCustomManagedObject}
+            customManagedObjectValue={customManagedObjectValue}
+          />
         </>
       )}
       {chosenView === "Cards" && (
@@ -649,12 +756,18 @@ export default function ReviewTable({
           <CardsTemplate
             selectedRadio={selectedRadio}
             selectedColumn={selectedColumn}
+            isCustomManagedObject={isCustomManagedObject}
+            customManagedObjectValue={customManagedObjectValue}
           />
         </>
       )}
       {chosenView === "Timeline" && (
         <>
-          <TimelineTemplate selectedRadio={selectedRadio} />
+          <TimelineTemplate
+            selectedRadio={selectedRadio}
+            isCustomManagedObject={isCustomManagedObject}
+            customManagedObjectValue={customManagedObjectValue}
+          />
         </>
       )}
       {chosenView === "Kanban" && (
@@ -662,6 +775,8 @@ export default function ReviewTable({
           <KanbanTemplate
             selectedColumn={selectedColumn}
             selectedRadio={selectedRadio}
+            isCustomManagedObject={isCustomManagedObject}
+            customManagedObjectValue={customManagedObjectValue}
           />
         </>
       )}
@@ -671,6 +786,8 @@ export default function ReviewTable({
           <GanttTemplate
             selectedColumn={selectedColumn}
             selectedRadio={selectedRadio}
+            isCustomManagedObject={isCustomManagedObject}
+            customManagedObjectValue={customManagedObjectValue}
           />
         </>
       )}

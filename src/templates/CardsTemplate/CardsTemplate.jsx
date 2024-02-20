@@ -1,6 +1,11 @@
 import React from "react";
 
-export default function CardsTemplate({ selectedRadio, selectedColumn }) {
+export default function CardsTemplate({
+  selectedRadio,
+  selectedColumn,
+  isCustomManagedObject,
+  customManagedObjectValue,
+}) {
   const colContent = [
     {
       id: "owner",
@@ -380,7 +385,13 @@ export default function CardsTemplate({ selectedRadio, selectedColumn }) {
         </div>
         <div className="p-1">
           <div className=" flex justify-between mb-2 max-w-full ">
-            <div className="truncate">{selectedRadio} 1</div>
+            <div className="truncate">
+              {isCustomManagedObject &&
+                !customManagedObjectValue.first &&
+                "Project 1"}
+              {isCustomManagedObject && customManagedObjectValue.first}
+              {!isCustomManagedObject && customManagedObjectValue.first}{" "}
+            </div>
             <div>
               <svg
                 viewBox="0 0 20 20"
@@ -463,7 +474,13 @@ export default function CardsTemplate({ selectedRadio, selectedColumn }) {
         </div>
         <div className="p-1">
           <div className=" max-w-full flex justify-between mb-2">
-            <div className='truncate'>{selectedRadio} 2</div>
+            <div className="truncate">
+              {isCustomManagedObject &&
+                !customManagedObjectValue.second &&
+                "Project 2"}
+              {isCustomManagedObject && customManagedObjectValue.second}
+              {!isCustomManagedObject && customManagedObjectValue.second}{" "}
+            </div>
             <div>
               <svg
                 viewBox="0 0 20 20"

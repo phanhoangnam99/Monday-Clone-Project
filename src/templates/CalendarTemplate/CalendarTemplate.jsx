@@ -1,6 +1,12 @@
 import React from "react";
 
-export default function CalendarTemplate({ selectedRadio }) {
+export default function CalendarTemplate({
+  selectedRadio,
+  isCustomManagedObject,
+  customManagedObjectValue,
+}) {
+  console.log(customManagedObjectValue);
+  console.log(isCustomManagedObject);
   return (
     <div className="bg-white  lg:max-w-7xl lg:mx-auto ">
       <p className="text-2xl font-semibold text-gray-800 my-4 ms-20 ">
@@ -37,8 +43,11 @@ export default function CalendarTemplate({ selectedRadio }) {
               <p className="opacity-50 text-sm font-medium text-gray-800">29</p>
 
               <span className="absolute bottom-1 text-xs -translate-x-1/2 left-1/2 px-2 py-1 w-[80%] truncate  rounded-sm text-center bg-[#fdab3d] text-white">
-                {" "}
-                {selectedRadio} 1
+                {isCustomManagedObject &&
+                  !customManagedObjectValue.first &&
+                  "Project 1"}
+                {isCustomManagedObject && customManagedObjectValue.first}
+                {!isCustomManagedObject && customManagedObjectValue.first}{" "}
               </span>
             </div>
             <div className="flex items-start justify-end w-full h-full border border-gray-200 pb-9 pr-2 pt-2">
@@ -48,7 +57,11 @@ export default function CalendarTemplate({ selectedRadio }) {
               <p className="opacity-50 text-sm font-medium text-gray-800">31</p>
               <span className="absolute bottom-1 text-xs -translate-x-1/2 left-1/2 px-2 py-1 w-[80%] truncate  rounded-sm text-center bg-[#00c875] text-white">
                 {" "}
-                {selectedRadio} 2
+                {isCustomManagedObject &&
+                  !customManagedObjectValue.second &&
+                  "Project 2"}
+                {isCustomManagedObject && customManagedObjectValue.second}
+                {!isCustomManagedObject && customManagedObjectValue.second}{" "}
               </span>
             </div>
 
@@ -59,7 +72,11 @@ export default function CalendarTemplate({ selectedRadio }) {
               <p className="text-sm font-medium text-gray-800">2</p>
               <span className="absolute bottom-1 text-xs -translate-x-1/2 left-1/2 px-2 py-1 w-[80%] truncate  rounded-sm text-center bg-[#e2445c] text-white">
                 {" "}
-                {selectedRadio} 3
+                {isCustomManagedObject &&
+                  !customManagedObjectValue.third &&
+                  "Project 3"}
+                {isCustomManagedObject && customManagedObjectValue.third}
+                {!isCustomManagedObject && customManagedObjectValue.third}{" "}
               </span>
             </div>
             <div className="flex items-start justify-end w-full h-full border border-gray-200 pb-9 pr-2 pt-2">

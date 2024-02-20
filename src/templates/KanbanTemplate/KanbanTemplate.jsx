@@ -1,6 +1,11 @@
 import React, { useEffect } from "react";
 
-export default function KanbanTemplate({ selectedColumn, selectedRadio }) {
+export default function KanbanTemplate({
+  selectedColumn,
+  selectedRadio,
+  isCustomManagedObject,
+  customManagedObjectValue,
+}) {
   const colContent = [
     {
       id: "owner",
@@ -367,7 +372,14 @@ export default function KanbanTemplate({ selectedColumn, selectedRadio }) {
           </div>
           <div className=" p-2 bg-[#f6f7fb] border-l-orange-400 border-l-2">
             <div className="flex flex-col gap-3 bg-white p-2">
-              <div className="font-bold truncate">{selectedRadio} 1</div>
+              <div className="font-bold truncate">
+                {" "}
+                {isCustomManagedObject &&
+                  !customManagedObjectValue.first &&
+                  "Project 1"}
+                {isCustomManagedObject && customManagedObjectValue.first}
+                {!isCustomManagedObject && customManagedObjectValue.first}{" "}
+              </div>
               <div className="flex flex-col gap-3 ">
                 {selectedColumn.map((col) => {
                   const findElement = colContent.find(
@@ -405,7 +417,9 @@ export default function KanbanTemplate({ selectedColumn, selectedRadio }) {
                 })}
               </div>
             </div>
-            <p className=" max-w-full truncate text-xs">Add {selectedRadio} +</p>
+            <p className=" max-w-full truncate text-xs">
+              Add {selectedRadio} +
+            </p>
           </div>
         </div>
       </div>
@@ -427,7 +441,14 @@ export default function KanbanTemplate({ selectedColumn, selectedRadio }) {
             }}
           >
             <div className="flex flex-col gap-3 bg-white p-2">
-              <div className="font-bold truncate">{selectedRadio} 2</div>
+              <div className="font-bold truncate">
+                {" "}
+                {isCustomManagedObject &&
+                  !customManagedObjectValue.second &&
+                  "Project 2"}
+                {isCustomManagedObject && customManagedObjectValue.second}
+                {!isCustomManagedObject && customManagedObjectValue.second}{" "}
+              </div>
               <div className="flex flex-col gap-3 ">
                 {selectedColumn.map((col) => {
                   const findElement = colContent.find(
@@ -487,7 +508,14 @@ export default function KanbanTemplate({ selectedColumn, selectedRadio }) {
             }}
           >
             <div className="flex flex-col gap-3 bg-white p-2">
-              <div className="font-bold truncate">{selectedRadio} 3</div>
+              <div className="font-bold truncate">
+                {" "}
+                {isCustomManagedObject &&
+                  !customManagedObjectValue.third &&
+                  "Project 3"}
+                {isCustomManagedObject && customManagedObjectValue.third}
+                {!isCustomManagedObject && customManagedObjectValue.third}{" "}
+              </div>
               <div className="flex flex-col gap-3 ">
                 {selectedColumn.map((col) => {
                   const findElement = colContent.find(

@@ -1,13 +1,37 @@
 import React from "react";
 
-export default function TimelineTemplate({ selectedRadio }) {
+export default function TimelineTemplate({
+  selectedRadio,
+  isCustomManagedObject,
+  customManagedObjectValue,
+}) {
   return (
     <div>
       <div className="flex flex-row gap-3">
         <div className="flex flex-col ml-16 whitespace-nowrap mt-20 gap-16">
-          <span className="truncate w-[90px]">{selectedRadio} 1</span>
-          <span className="truncate w-[90px]">{selectedRadio} 2</span>
-          <span className="truncate w-[90px]">{selectedRadio} 3</span>
+          <span className="truncate w-[90px]">
+            {" "}
+            {isCustomManagedObject &&
+              !customManagedObjectValue.first &&
+              "Project 1"}
+            {isCustomManagedObject && customManagedObjectValue.first}
+            {!isCustomManagedObject && selectedRadio + " 1"}
+          </span>
+          <span className="truncate w-[90px]">
+            {" "}
+            {isCustomManagedObject &&
+              !customManagedObjectValue.second &&
+              "Project 2"}
+            {isCustomManagedObject && customManagedObjectValue.second}
+            {!isCustomManagedObject && selectedRadio + " 2"}
+          </span>
+          <span className="truncate w-[90px]">
+            {isCustomManagedObject &&
+              !customManagedObjectValue.third &&
+              "Project 3"}
+            {isCustomManagedObject && customManagedObjectValue.third}{" "}
+            {!isCustomManagedObject && selectedRadio + " 3"}
+          </span>
         </div>
         <div>
           <table className="relative">
@@ -40,9 +64,21 @@ export default function TimelineTemplate({ selectedRadio }) {
               <td className="border !border-b-0 h-7"></td>
             </tr>
             <tr>
-              <td colSpan={2} className=" max-w-[90px] border-r relative p-0" id="divider">
+              <td
+                colSpan={2}
+                className=" max-w-[90px] border-r relative p-0"
+                id="divider"
+              >
                 <div className=" flex w-full rounded-sm bg-orange-400 justify-center text-white ">
-                  <span className='truncate'>{selectedRadio} 1</span>
+                  <span className="truncate">
+                    {" "}
+                    {isCustomManagedObject &&
+                      !customManagedObjectValue.first &&
+                      "Project 1"}
+                    {isCustomManagedObject && customManagedObjectValue.first}
+                    {!isCustomManagedObject &&
+                      customManagedObjectValue.first}{" "}
+                  </span>
                 </div>
               </td>
               <td className="border-r !border-b-0"></td>
@@ -63,7 +99,15 @@ export default function TimelineTemplate({ selectedRadio }) {
               <td className="  relative p-0" id="divider"></td>
               <td colSpan={2} className=" max-w-[90px] p-0">
                 <div className=" truncate relative  w-[100%] flex justify-center  rounded-sm bg-[#34e093] justify-center text-white ">
-                  <span className='truncate'>{selectedRadio} 2</span>
+                  <span className="truncate">
+                    {" "}
+                    {isCustomManagedObject &&
+                      !customManagedObjectValue.second &&
+                      "Project 2"}
+                    {isCustomManagedObject && customManagedObjectValue.second}
+                    {!isCustomManagedObject &&
+                      customManagedObjectValue.second}{" "}
+                  </span>
                 </div>
               </td>
               <td className="border-r"></td>
@@ -84,7 +128,13 @@ export default function TimelineTemplate({ selectedRadio }) {
               <td className="border-r"></td>
               <td colSpan={2} className="max-w-[90px] p-0">
                 <div className=" relative  w-[100%] flex justify-center  rounded-sm bg-[#f75f75] justify-center text-white ">
-                  <span className="truncate">{selectedRadio} 3</span>
+                  <span className="truncate">
+                    {isCustomManagedObject &&
+                      !customManagedObjectValue.third &&
+                      "Project 3"}
+                    {isCustomManagedObject && customManagedObjectValue.third}{" "}
+                    {!isCustomManagedObject && customManagedObjectValue.third}{" "}
+                  </span>
                 </div>
               </td>
             </tr>

@@ -13,21 +13,32 @@ import {
 
 export default function BoardCreate() {
   const [inputValue, setInputValue] = useState("");
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const [disabled, setDisabled] = useState(true);
   const [chosenBtn, setChosenBtn] = useState([]);
   const [currentDesc, setCurrentDesc] = useState("");
 
-  const inputRef = useRef();
-  const btnRef = useRef();
   const [chosenRadio, setChosenRadio] = useState("");
 
+  const [isVisited, setIsVisited] = useState([]);
+
+  const [order, setOrder] = useState();
+
+  const [isCustomManagedObject, setIsCustomManagedObject] = useState(false);
+
+  const [customManagedObjectValue, setCustomManagedObjectValue] = useState({
+    first: "",
+    second: "",
+    third: "",
+  });
   const dispatch = useDispatch();
 
   const { chosenView, viewDesc, viewColor } = useSelector(
     (state) => state.board
   );
-  const [isVisited, setIsVisited] = useState([]);
+
+  const inputRef = useRef();
+  const btnRef = useRef();
 
   useEffect(() => {
     setChosenBtn([{ id: "owner" }, { id: "status" }, { id: "due-date" }]);
@@ -36,11 +47,21 @@ export default function BoardCreate() {
     if (!isVisited.includes(step)) {
       setIsVisited((prev) => [...prev, step]);
     }
-    if (isVisited.includes(3)) {
-      chosenRadio || setChosenRadio("Projects");
+    if (isVisited.includes(3) && !isVisited.includes(5)) {
+      chosenRadio || setChosenRadio("Project");
+    }
+
+    if (
+      step === 3 &&
+      isVisited.includes(5) &&
+      chosenRadio !== "Project" &&
+      chosenRadio !== "Task"
+    ) {
+      document.getElementById("customRadioInput").focus();
     }
   }, [step, isVisited]);
   const checkBlankInput = (e) => {
+    console.log(e.target.value);
     inputRef.current = e.target.value;
     console.log(inputRef);
     if (inputRef.current) {
@@ -68,6 +89,21 @@ export default function BoardCreate() {
       ColSelBtn.find((btn) => btn.id === lastOfChosenBtnArray)?.desc
     );
   }, [chosenBtn]);
+
+  useEffect(() => {
+    if (isVisited.includes(3) || isVisited.includes(5)) {
+      setCustomManagedObjectValue((prevState) => ({
+        ...prevState,
+        first: chosenRadio + " 1",
+        second: chosenRadio + " 2",
+        third: chosenRadio + " 3",
+      }));
+    }
+
+    if (!chosenRadio && isVisited.includes(3)) {
+      setChosenRadio("Project");
+    }
+  }, [chosenRadio, isVisited]);
 
   const logState = (id, state) => {
     console.log(id, state);
@@ -460,8 +496,6 @@ export default function BoardCreate() {
     },
   ];
 
-  const [order, setOrder] = useState();
-
   return (
     <>
       {step === 1 && (
@@ -668,6 +702,15 @@ export default function BoardCreate() {
                               boardColor="#559afd"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
                             />
                             <ReviewTable
                               rowNumber={2}
@@ -675,6 +718,12 @@ export default function BoardCreate() {
                               marginTop="32px"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
                             />
                           </>
                         ) : (
@@ -684,6 +733,15 @@ export default function BoardCreate() {
                               boardColor="#559afd"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
                             />
                           </>
                         )}
@@ -886,6 +944,15 @@ export default function BoardCreate() {
                               boardColor="#559afd"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
                             />
                             <ReviewTable
                               rowNumber={2}
@@ -893,6 +960,12 @@ export default function BoardCreate() {
                               marginTop="32px"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
                             />
                           </>
                         ) : (
@@ -902,6 +975,15 @@ export default function BoardCreate() {
                               boardColor="#559afd"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
                             />
                           </>
                         )}
@@ -929,7 +1011,7 @@ export default function BoardCreate() {
                     <div className="w-full relative flex gap-2 flex-wrap">
                       <Formik
                         initialValues={{
-                          picked: "Projects",
+                          picked: chosenRadio,
                         }}
                         onSubmit={async (values) => {
                           await new Promise((r) => setTimeout(r, 500));
@@ -952,7 +1034,8 @@ export default function BoardCreate() {
                                   checked={values.picked === "Projects"}
                                   onChange={() => {
                                     setFieldValue("picked", "Projects");
-                                    setChosenRadio("Projects");
+                                    setChosenRadio("Project");
+                                    setIsCustomManagedObject(false);
                                   }}
                                 />
                                 Projects
@@ -966,7 +1049,8 @@ export default function BoardCreate() {
                                   checked={values.picked === "Tasks"}
                                   onChange={() => {
                                     setFieldValue("picked", "Tasks");
-                                    setChosenRadio("Tasks");
+                                    setChosenRadio("Task");
+                                    setIsCustomManagedObject(false);
                                   }}
                                 />
                                 Tasks
@@ -979,7 +1063,10 @@ export default function BoardCreate() {
                                     value="Custom"
                                     id="customRadio"
                                     className="flex"
-                                    checked={values.picked === "Custom"}
+                                    checked={
+                                      values.picked !== "Projects" &&
+                                      values.picked !== "Tasks"
+                                    }
                                     onClick={() => {
                                       document
                                         .getElementById("customRadioInput")
@@ -989,6 +1076,8 @@ export default function BoardCreate() {
                                           "customRadioInput"
                                         ).value
                                       );
+
+                                      setIsCustomManagedObject(true);
                                     }}
                                     onChange={() => {
                                       setFieldValue("picked", "Custom");
@@ -1009,13 +1098,28 @@ export default function BoardCreate() {
                                           "customRadioInput"
                                         ).value
                                       );
+                                      setIsCustomManagedObject(true);
                                     }}
                                     classNameInput="w-1/2 ml-3 p-1 outline-none border border-gray-300 focus:border-[#0073ea] hover:border-[#323338] rounded-md focus:shadow-sm"
                                     onChange={(e) => {
                                       setChosenRadio(e.target.value);
                                       if (!e.target.value) {
-                                        setChosenRadio("Projects");
+                                        setChosenRadio("Project");
                                       }
+                                      setCustomManagedObjectValue({
+                                        first:
+                                          document.getElementById(
+                                            "customRadioInput"
+                                          ).value,
+                                        second:
+                                          document.getElementById(
+                                            "customRadioInput"
+                                          ).value,
+                                        third:
+                                          document.getElementById(
+                                            "customRadioInput"
+                                          ).value,
+                                      });
                                     }}
                                   />
                                 </div>
@@ -1183,6 +1287,15 @@ export default function BoardCreate() {
                               boardColor="#559afd"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
                             />
                             <ReviewTable
                               rowNumber={2}
@@ -1190,6 +1303,12 @@ export default function BoardCreate() {
                               marginTop="32px"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
                             />
                           </>
                         ) : (
@@ -1199,6 +1318,15 @@ export default function BoardCreate() {
                               boardColor="#559afd"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
                             />
                           </>
                         )}
@@ -1273,7 +1401,7 @@ export default function BoardCreate() {
                     <div className="justify-evenly">
                       <button
                         className={` text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] hover:bg-[#0060b9] `}
-                
+                        onClick={() => handleStepChange(step + 1)}
                       >
                         <div className="flex justify-evenly ">
                           <span>Next</span>
@@ -1399,6 +1527,15 @@ export default function BoardCreate() {
                               boardColor="#559afd"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
                             />
                             <ReviewTable
                               rowNumber={2}
@@ -1406,6 +1543,12 @@ export default function BoardCreate() {
                               marginTop="32px"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
                             />
                           </>
                         ) : (
@@ -1415,6 +1558,253 @@ export default function BoardCreate() {
                               boardColor="#559afd"
                               selectedCol={chosenBtn}
                               selectedRadio={chosenRadio}
+                              isVisited={isVisited}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
+                            />
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {step === 5 && (
+        <div>
+          <div className="grid sm:grid-cols-12 auto-cols-auto h-[100vh]">
+            <div className="lg:col-span-6 col-span-12   grid">
+              <div className="md:px-32 md:py-16 flex flex-col md:justify-start justify-start items-center ">
+                <div className=" flex flex-col  w-[80%] md:w-full h-full justify-center">
+                  <div className="mb-3">
+                    <div className=" text-2xl font-sans font-medium  py-4 mt-6">
+                      <p>List your {chosenRadio}s</p>
+                    </div>
+                  </div>
+                  <div className="flex  flex-col justify-center items-start mt-3 text-sm sm:text-base">
+                    <div className="w-full relative flex flex-col gap-6 flex-wrap">
+                      <Input
+                        value={customManagedObjectValue.first}
+                        onChange={(e) =>
+                          setCustomManagedObjectValue((prevState) => ({
+                            ...prevState,
+                            first: e.target.value,
+                          }))
+                        }
+                      ></Input>
+                      <Input
+                        value={customManagedObjectValue.second}
+                        onChange={(e) =>
+                          setCustomManagedObjectValue((prevState) => ({
+                            ...prevState,
+                            second: e.target.value,
+                          }))
+                        }
+                      ></Input>
+
+                      <Input
+                        value={customManagedObjectValue.third}
+                        onChange={(e) =>
+                          setCustomManagedObjectValue((prevState) => ({
+                            ...prevState,
+                            third: e.target.value,
+                          }))
+                        }
+                      ></Input>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full mt-5 flex flex-auto ">
+                  <div className=" mt-auto flex justify-between  w-full">
+                    <div className="justify-evenly">
+                      <button
+                        className={` border-2 rounded-[5px] px-3 py-2 w-24 bg-[#ffffff] hover:bg-[#dcdfec] `}
+                        onClick={() => handleStepChange(step - 1)}
+                      >
+                        <div className="flex justify-evenly ">
+                          <span>{"<"}</span>
+                          <span>Back</span>
+                        </div>
+                      </button>
+                    </div>
+                    <div className="justify-evenly">
+                      <button
+                        className={` text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] hover:bg-[#0060b9] `}
+                        
+                      >
+                        <div className="flex justify-evenly ">
+                          <span>Next</span>
+                          <span>{">"}</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-6  lg:grid hidden bg-allgrey-background-color h-[100vh]">
+              <div className="relative">
+                <div className="flex justify-end p-2">
+                  <button className="flex justify-center items-center w-10 h-10">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18 18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div id="cai_bang">
+                  <div className="bg-[#fff] [box-shadow:0px_4px_6px_-4px_rgba(0,_0,_0,_0.1)] [box-sizing:initial] flex [filter:drop-shadow(-10px_10px_30px_rgba(29,140,242,.3))] flex-col h-[555px] overflow-y-auto pt-[32px] absolute right-[0] top-2/4 -translate-y-1/2 [transition:transform_.2s_ease-in-out] w-[90%]">
+                    <div className="flex flex-col flex-1 overflow-hidden">
+                      <div className="ml-8">
+                        {!inputValue ? (
+                          <div className="flex board_display_size">
+                            <div className="my-3 w-[30%] h-2 bg-[#c3c6d4] rounded-lg"></div>
+                          </div>
+                        ) : (
+                          <div className="flex board_display_size">
+                            <h1 className="truncate text-[#656789] [font-weight:500] text-3xl">
+                              {inputValue}
+                            </h1>
+                          </div>
+                        )}
+                        <div className="flex flex-row justify-between mt-2 mr-8 mb-4">
+                          <div className="flex flex-row h-[42px] pointer-events-none">
+                            {isVisited.includes(4) && chosenView === "Table" ? (
+                              <>
+                                <div
+                                  className="w-full py-1 px-4   relative flex justify-center "
+                                  id="viewMode"
+                                >
+                                  <span className="text-lg mx-auto ">
+                                    Table
+                                  </span>
+                                </div>
+                                <div className=" !mt-[2%]">
+                                  <span>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke-width="1.5"
+                                      stroke="currentColor"
+                                      class="w-6 h-6"
+                                    >
+                                      <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M12 4.5v15m7.5-7.5h-15"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </>
+                            ) : (
+                              isVisited.includes(4) && (
+                                <>
+                                  <div className="w-full  flex   border-b-[3px] border-b-gray-500 ">
+                                    <span className="text-lg py-1 px-4 mx-auto">
+                                      Table
+                                    </span>
+                                  </div>
+                                  <div
+                                    className=" relative flex w-full   "
+                                    id="viewMode"
+                                  >
+                                    <span className="text-lg relative py-1 px-4  mx-auto">
+                                      {chosenView}
+                                    </span>
+                                  </div>
+                                  <div className=" mt-[2%] ">
+                                    <span>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="w-6 h-6"
+                                      >
+                                        <path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M12 4.5v15m7.5-7.5h-15"
+                                        />
+                                      </svg>
+                                    </span>
+                                  </div>
+                                </>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="overflow-x-scroll">
+                        {chosenView === "Table" ? (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              isVisited={isVisited}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
+                            />
+                            <ReviewTable
+                              rowNumber={2}
+                              boardColor="#00c875"
+                              marginTop="32px"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              isVisited={isVisited}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
                             />
                           </>
                         )}

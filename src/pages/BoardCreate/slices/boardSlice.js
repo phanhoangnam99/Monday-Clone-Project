@@ -24,6 +24,9 @@ const boardSlice = createSlice({
     handleChangeViewColor: (state, action) => {
       state.viewColor = action.payload;
     },
+handleChangeTaskName :(state,action) =>{
+
+}
   },
 });
 
