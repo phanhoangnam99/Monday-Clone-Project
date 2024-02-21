@@ -1916,11 +1916,10 @@ export default function BoardCreate() {
                     </div>
                     <div className="justify-evenly">
                       <button
-                        className={` text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] hover:bg-[#0060b9] `}
+                        className={` text-white rounded-[5px] px-3 py-2 w-28 bg-[#0073ea] hover:bg-[#0060b9] `}
                       >
                         <div className="flex justify-evenly ">
-                          <span>Next</span>
-                          <span>{">"}</span>
+                          <span>Get started</span>
                         </div>
                       </button>
                     </div>
