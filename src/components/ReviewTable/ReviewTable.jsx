@@ -16,6 +16,7 @@ export default function ReviewTable({
   selectedRadio,
   isCustomManagedObject,
   customManagedObjectValue,
+  groupTask,
 }) {
   // Use rowNumber as the initial value for rows state
 
@@ -725,17 +726,34 @@ export default function ReviewTable({
                   gridTemplateColumns: `170px repeat(${selectedColumn?.length},minmax(auto,200px) ) auto`,
                 }}
               >
-                <div
-                  className={`col-[1] mb-2 flex items-center justify-start h-9 w-full`}
-                  style={{ marginTop: `${marginTop}` }}
-                >
+                {!groupTask && (
                   <div
-                    className={` w-[70%] h-[6px] rounded-lg mb-2`}
-                    style={{
-                      backgroundColor: `${boardColor}`,
-                    }}
-                  ></div>
-                </div>
+                    className={`col-[1] mb-2 flex items-center justify-start h-9 w-full`}
+                    style={{ marginTop: `${marginTop}` }}
+                  >
+                    <div
+                      className={` w-[70%] h-[6px] mt-1 rounded-lg mb-2`}
+                      style={{
+                        backgroundColor: `${boardColor}`,
+                      }}
+                    ></div>
+                  </div>
+                )}
+                {groupTask && (
+                  <div
+                    className={`col-[1] col-span-12 max-w-full mb-2 flex items-center justify-start h-9 w-full`}
+                    style={{ marginTop: `${marginTop}` }}
+                  >
+                    <div
+                      className={` w-[70%]  truncate  `}
+                      style={{
+                        color: `${boardColor}`,
+                      }}
+                    >
+                      {groupTask}
+                    </div>
+                  </div>
+                )}
                 {rowRender()}
               </div>
             </div>

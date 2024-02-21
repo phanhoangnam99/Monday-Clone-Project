@@ -31,6 +31,8 @@ export default function BoardCreate() {
     second: "",
     third: "",
   });
+
+  const [groupTask, setGroupTask] = useState({ first: "", second: "" });
   const dispatch = useDispatch();
 
   const { chosenView, viewDesc, viewColor } = useSelector(
@@ -58,6 +60,14 @@ export default function BoardCreate() {
       chosenRadio !== "Task"
     ) {
       document.getElementById("customRadioInput").focus();
+    }
+
+    if (step === 6) {
+      setGroupTask((prevState) => ({
+        ...prevState,
+        first: "This week",
+        second: "Next week",
+      }));
     }
   }, [step, isVisited]);
   const checkBlankInput = (e) => {
@@ -711,6 +721,7 @@ export default function BoardCreate() {
                               setCustomManagedObjectValue={
                                 setCustomManagedObjectValue
                               }
+                              groupTask={groupTask.first}
                             />
                             <ReviewTable
                               rowNumber={2}
@@ -724,6 +735,7 @@ export default function BoardCreate() {
                                 customManagedObjectValue
                               }
                               step={step}
+                              groupTask={groupTask.first}
                             />
                           </>
                         ) : (
@@ -742,6 +754,7 @@ export default function BoardCreate() {
                               setCustomManagedObjectValue={
                                 setCustomManagedObjectValue
                               }
+                              groupTask={groupTask.first}
                             />
                           </>
                         )}
@@ -953,6 +966,7 @@ export default function BoardCreate() {
                               setCustomManagedObjectValue={
                                 setCustomManagedObjectValue
                               }
+                              groupTask={groupTask.first}
                             />
                             <ReviewTable
                               rowNumber={2}
@@ -966,6 +980,7 @@ export default function BoardCreate() {
                                 customManagedObjectValue
                               }
                               step={step}
+                              groupTask={groupTask.first}
                             />
                           </>
                         ) : (
@@ -984,6 +999,7 @@ export default function BoardCreate() {
                               setCustomManagedObjectValue={
                                 setCustomManagedObjectValue
                               }
+                              groupTask={groupTask.first}
                             />
                           </>
                         )}
@@ -1296,6 +1312,7 @@ export default function BoardCreate() {
                               setCustomManagedObjectValue={
                                 setCustomManagedObjectValue
                               }
+                              groupTask={groupTask.first}
                             />
                             <ReviewTable
                               rowNumber={2}
@@ -1309,6 +1326,7 @@ export default function BoardCreate() {
                                 customManagedObjectValue
                               }
                               step={step}
+                              groupTask={groupTask.first}
                             />
                           </>
                         ) : (
@@ -1327,6 +1345,7 @@ export default function BoardCreate() {
                               setCustomManagedObjectValue={
                                 setCustomManagedObjectValue
                               }
+                              groupTask={groupTask.first}
                             />
                           </>
                         )}
@@ -1536,6 +1555,7 @@ export default function BoardCreate() {
                               setCustomManagedObjectValue={
                                 setCustomManagedObjectValue
                               }
+                              groupTask={groupTask.first}
                             />
                             <ReviewTable
                               rowNumber={2}
@@ -1549,6 +1569,7 @@ export default function BoardCreate() {
                                 customManagedObjectValue
                               }
                               step={step}
+                              groupTask={groupTask.first}
                             />
                           </>
                         ) : (
@@ -1567,6 +1588,7 @@ export default function BoardCreate() {
                               setCustomManagedObjectValue={
                                 setCustomManagedObjectValue
                               }
+                              groupTask={groupTask.first}
                             />
                           </>
                         )}
@@ -1637,9 +1659,264 @@ export default function BoardCreate() {
                       </button>
                     </div>
                     <div className="justify-evenly">
+                      {chosenView === "Table" ? (
+                        <button
+                          className={` text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] hover:bg-[#0060b9] `}
+                          onClick={() => handleStepChange(step + 1)}
+                        >
+                          <div className="flex justify-evenly ">
+                            <span>Next</span>
+                            <span>{">"}</span>
+                          </div>
+                        </button>
+                      ) : (
+                        <button
+                          className={` text-white rounded-[5px] px-3 py-2 w-28 bg-[#0073ea] hover:bg-[#0060b9] `}
+                        >
+                          <div className="flex justify-evenly ">
+                            <span>Get started</span>
+                          </div>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-6  lg:grid hidden bg-allgrey-background-color h-[100vh]">
+              <div className="relative">
+                <div className="flex justify-end p-2">
+                  <button className="flex justify-center items-center w-10 h-10">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18 18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div id="cai_bang">
+                  <div className="bg-[#fff] [box-shadow:0px_4px_6px_-4px_rgba(0,_0,_0,_0.1)] [box-sizing:initial] flex [filter:drop-shadow(-10px_10px_30px_rgba(29,140,242,.3))] flex-col h-[555px] overflow-y-auto pt-[32px] absolute right-[0] top-2/4 -translate-y-1/2 [transition:transform_.2s_ease-in-out] w-[90%]">
+                    <div className="flex flex-col flex-1 overflow-hidden">
+                      <div className="ml-8">
+                        {!inputValue ? (
+                          <div className="flex board_display_size">
+                            <div className="my-3 w-[30%] h-2 bg-[#c3c6d4] rounded-lg"></div>
+                          </div>
+                        ) : (
+                          <div className="flex board_display_size">
+                            <h1 className="truncate text-[#656789] [font-weight:500] text-3xl">
+                              {inputValue}
+                            </h1>
+                          </div>
+                        )}
+                        <div className="flex flex-row justify-between mt-2 mr-8 mb-4">
+                          <div className="flex flex-row h-[42px] pointer-events-none">
+                            {isVisited.includes(4) && chosenView === "Table" ? (
+                              <>
+                                <div
+                                  className="w-full py-1 px-4   relative flex justify-center "
+                                  id="viewMode"
+                                >
+                                  <span className="text-lg mx-auto ">
+                                    Table
+                                  </span>
+                                </div>
+                                <div className=" !mt-[2%]">
+                                  <span>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke-width="1.5"
+                                      stroke="currentColor"
+                                      class="w-6 h-6"
+                                    >
+                                      <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M12 4.5v15m7.5-7.5h-15"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </>
+                            ) : (
+                              isVisited.includes(4) && (
+                                <>
+                                  <div className="w-full  flex   border-b-[3px] border-b-gray-500 ">
+                                    <span className="text-lg py-1 px-4 mx-auto">
+                                      Table
+                                    </span>
+                                  </div>
+                                  <div
+                                    className=" relative flex w-full   "
+                                    id="viewMode"
+                                  >
+                                    <span className="text-lg relative py-1 px-4  mx-auto">
+                                      {chosenView}
+                                    </span>
+                                  </div>
+                                  <div className=" mt-[2%] ">
+                                    <span>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="w-6 h-6"
+                                      >
+                                        <path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M12 4.5v15m7.5-7.5h-15"
+                                        />
+                                      </svg>
+                                    </span>
+                                  </div>
+                                </>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="overflow-x-scroll">
+                        {chosenView === "Table" ? (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              isVisited={isVisited}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
+                              groupTask={groupTask.first}
+                            />
+                            <ReviewTable
+                              rowNumber={2}
+                              boardColor="#00c875"
+                              marginTop="32px"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              isVisited={isVisited}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
+                              groupTask={groupTask.first}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <ReviewTable
+                              rowNumber={5}
+                              boardColor="#559afd"
+                              selectedCol={chosenBtn}
+                              selectedRadio={chosenRadio}
+                              isCustomManagedObject={isCustomManagedObject}
+                              customManagedObjectValue={
+                                customManagedObjectValue
+                              }
+                              step={step}
+                              setCustomManagedObjectValue={
+                                setCustomManagedObjectValue
+                              }
+                              groupTask={groupTask.first}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {chosenView === "Table" && step === 6 && (
+        <div>
+          <div className="grid sm:grid-cols-12 auto-cols-auto h-[100vh]">
+            <div className="lg:col-span-6 col-span-12   grid">
+              <div className="md:px-32 md:py-16 flex flex-col md:justify-start justify-start items-center ">
+                <div className=" flex flex-col  w-[80%] md:w-full h-full justify-center">
+                  <div className="mb-3">
+                    <div className=" text-2xl font-sans font-semibold  py-4 mt-6">
+                      <p>
+                        Group {chosenRadio.toLowerCase()}s to better organize
+                        your work
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex  flex-col justify-center items-start mt-3 text-sm sm:text-base">
+                    <div className="w-full relative flex flex-col gap-6 flex-wrap">
+                      <span className="mb-[-20px] font-sans font-normal">
+                        E.g. time frame, subject, etc.
+                      </span>
+                      <Input
+                        value={groupTask.first}
+                        onChange={(e) =>
+                          setGroupTask((prevState) => ({
+                            ...prevState,
+                            first: e.target.value,
+                          }))
+                        }
+                        clearBtn
+                      ></Input>
+                      <Input
+                        value={groupTask.second}
+                        onChange={(e) =>
+                          setGroupTask((prevState) => ({
+                            ...prevState,
+                            second: e.target.value,
+                          }))
+                        }
+                      ></Input>
+                    </div>
+                    <div
+                      className={`  box-content flex items-center	mb-40 bg-allgrey-background-color lg:mt-12 lg:mb-40 my-8 ps-3 lg:pe-16 py-3 pe-5  lg:h-14 h-10  `}
+                    >
+                      <span className="ps-1">
+                        "Groups" keep the related items together to help you
+                        better organize your work.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full mt-5 flex flex-auto ">
+                  <div className=" mt-auto flex justify-between  w-full">
+                    <div className="justify-evenly">
+                      <button
+                        className={` border-2 rounded-[5px] px-3 py-2 w-24 bg-[#ffffff] hover:bg-[#dcdfec] `}
+                        onClick={() => handleStepChange(step - 1)}
+                      >
+                        <div className="flex justify-evenly ">
+                          <span>{"<"}</span>
+                          <span>Back</span>
+                        </div>
+                      </button>
+                    </div>
+                    <div className="justify-evenly">
                       <button
                         className={` text-white rounded-[5px] px-3 py-2 w-24 bg-[#0073ea] hover:bg-[#0060b9] `}
-                        
                       >
                         <div className="flex justify-evenly ">
                           <span>Next</span>
@@ -1773,6 +2050,7 @@ export default function BoardCreate() {
                               setCustomManagedObjectValue={
                                 setCustomManagedObjectValue
                               }
+                              groupTask={groupTask.first}
                             />
                             <ReviewTable
                               rowNumber={2}
@@ -1788,6 +2066,7 @@ export default function BoardCreate() {
                               setCustomManagedObjectValue={
                                 setCustomManagedObjectValue
                               }
+                              groupTask={groupTask.second}
                             />
                           </>
                         ) : (
@@ -1805,6 +2084,7 @@ export default function BoardCreate() {
                               setCustomManagedObjectValue={
                                 setCustomManagedObjectValue
                               }
+                              groupTask={groupTask}
                             />
                           </>
                         )}
